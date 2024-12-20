@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Liora</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Left Side: Form */
+    .form-section {
+      flex: 1;
+      padding: 30px 40px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #333333;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #ffc107;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ffc107;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #e0a800;
+    }
+
+    /* Google Button */
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #333;
+      background-color: #ffffff;
+      font-size: 14px;
+    }
+
+    .google-btn img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .google-btn:hover {
+      background-color: #f2f2f2;
+    }
+
+    p {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    p a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    p a:hover {
+      text-decoration: underline;
+    }
+
+    /* Right Side: Image Section */
+    .image-section {
+      flex: 1;
+      background-color: #ffe8a1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .image-section img {
+      max-width: 250px;
+      margin-bottom: 10px;
+    }
+
+    .image-section h2 {
+      font-size: 22px;
+      color: #333;
+      margin-top: 10px;
+    }
+    .error-message{
+        color: red;
+        font-size: 0.75rem;
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Section: Form -->
+    <div class="form-section">
+      <h1>Sign Up</h1>
+      <form id ="signform"action="/signup" method="POST">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter Name" required>
+        <div id ="error1" class="error-message"></div>
+        
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter Email" required>
+        <div id ="error2" class="error-message"></div>
+       
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter Phone Number" required>
+        <div id ="error3" class="error-message"></div>
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter Password" required>
+        <div id ="error4" class="error-message"></div>
+       
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" required>
+        <div id ="error5" class="error-message"></div>
+        <%if(locals.message && message.length>0){%>
+          <div class="alert alert-danger text-center">
+            <%=message%>
+          </div>
+          <%}%>
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <!-- Continue with Google Button -->
+      <a href="/auth/google" class="google-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
+        Continue with Google
+      </a>
+
+      <p>Already registered? <a href="/login">Log in</a></p>
+    </div>
+
+    <!-- Right Section: Image -->
+    <div class="image-section">
+        <img src="image/logo liora.webp" alt="Liora Perfume" style="width:250px; height:250px; object-fit:cover;">
+
+      <h2>Discover Liora</h2>
+      <p>Find your signature scent and embrace luxury.</p>
+    </div>
+  </div>
+</body>
+</html>
+
+
+<script>
+//     const nameid = document.getElementById("name")
+//     const emailid = document.getElementById("email")
+//     const phoneid = document.getElementById("phone")
+//     const passid = document.getElementById("password")
+//     const cpassid = document.getElementById("confirmPassword")
+//     const error1 = document.getElementById("error1")
+//     const error2 = document.getElementById("error2")
+//     const error3 = document.getElementById("error3")
+//     const error4 = document.getElementById("error4")
+//     const error5 = document.getElementById("error5")
+//     const signform = document.getElementById("signform")
+
+//    function nameValidateChecking(e){
+     
+//     const nameval = nameid.value
+//     const namepattern = /^[A-Za-z\s]+$/
+//     if(nameval.trim()===""){
+//         error1.style.display="block"
+//         error1.innerHTML="please enter a valid name"
+
+//     }else if(!namepattern.test(nameval)){
+//         error1.style.display="block"
+//         error1.innerHTML="name can only contain alphabets and spaces"
+
+//     }else{
+//         error1.style.display="none"
+//         error1.innerHTML=""
+//     }
+//    }
+
+//  function  emailValidateChecking(e){
+//     const emailval = emailid.value
+//     const emailpattern = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+//      if(!emailpattern.test(emailval)){
+//         error2.style.display="block"
+//         error2.innerHTML ="invalid format"
+//      }else{
+//         error2.style.display="none"
+//         error2.innerHTML=""
+//      }
+// }
+
+// function phoneValidateChecking(e){
+//     const phoneval = phoneid.value
+//     if(phoneval.trim()===""){
+//         error3.style.display="block"
+//         error3.innerHTML="enter valid phone number"
+
+//     }else if(phoneval.length<10||phoneval.length>10){
+//         error3.style.display="block"
+//         error3.innerHTML="enter 10 digit"
+
+//     }else{
+//         error3.style.display="none"
+//         error3.innerHTML=""
+//     }
+
+// }
+
+// function  passValidateChecking(){
+//     const passval = passid.value
+//     const cpassval = cpassid.value
+//     const alpha=/[a-zA-Z]/
+//     const digit =/\d/
+
+//     if(passval.length<8){
+//         error4.style.display="block"
+//         error4.innerHTML="should contain atleast 8 characters"
+
+//     }else if(!alpha.test(passval) || !digit.test(passval)){
+//         error4.style.display="block"
+//         error4.innerHTML="should contain numbers and alphabet"
+
+//     }else{
+//         error4.style.display="none"
+//         error4.innerHTML=""
+//     }
+
+//     if(passval!==cpassval){
+//         error5.style.display="block"
+//         error5.innerHTML="password donot match"
+
+//     }else{
+//         error5.style.display="none"
+//         error5.innerHTML=""
+//     }
+// }
+
+
+
+
+//     document.addEventListener("DOMContentLoaded",function(){
+//         signform.addEventListener("submit",function(e){
+//             nameValidateChecking()
+//             emailValidateChecking()
+//             phoneValidateChecking()
+//             passValidateChecking()
+
+//             if(
+//               !nameid || !emailid ||!phoneid ||!passid || !error1 ||  !error2 ||  !error3 ||  !error4 ||  !error5 || !signform
+//             ){
+//                 console.log("one or more elements not found ")
+//             }
+
+//             if(error1.innerHTML || error2.innerHTML || error3.innerHTML || error4.innerHTML || error5.innerHTML ){
+//                 e.preventDefault()
+//             }
+//         })
+//     })
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const nameid = document.getElementById("name");
+  const emailid = document.getElementById("email");
+  const phoneid = document.getElementById("phone");
+  const passid = document.getElementById("password");
+  const cpassid = document.getElementById("confirmPassword");
+  const error1 = document.getElementById("error1");
+  const error2 = document.getElementById("error2");
+  const error3 = document.getElementById("error3");
+  const error4 = document.getElementById("error4");
+  const error5 = document.getElementById("error5");
+  const signform = document.getElementById("signform");
+
+  function nameValidateChecking() {
+    const nameval = nameid.value.trim();
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (nameval === "") {
+      error1.style.display = "block";
+      error1.innerHTML = "Please enter a valid name";
+    } else if (!namePattern.test(nameval)) {
+      error1.style.display = "block";
+      error1.innerHTML = "Name can only contain alphabets and spaces";
+    } else {
+      error1.style.display = "none";
+      error1.innerHTML = "";
+    }
+  }
+
+  function emailValidateChecking() {
+    const emailval = emailid.value.trim();
+    const emailPattern = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailPattern.test(emailval)) {
+      error2.style.display = "block";
+      error2.innerHTML = "Invalid email format";
+    } else {
+      error2.style.display = "none";
+      error2.innerHTML = "";
+    }
+  }
+
+  function phoneValidateChecking() {
+    const phoneval = phoneid.value.trim();
+    if (phoneval === "") {
+      error3.style.display = "block";
+      error3.innerHTML = "Enter a valid phone number";
+    } else if (phoneval.length !== 10 || isNaN(phoneval)) {
+      error3.style.display = "block";
+      error3.innerHTML = "Enter a valid 10-digit phone number";
+    } else {
+      error3.style.display = "none";
+      error3.innerHTML = "";
+    }
+  }
+
+  function passValidateChecking() {
+    const passval = passid.value.trim();
+    const cpassval = cpassid.value.trim();
+    const alpha = /[a-zA-Z]/;
+    const digit = /\d/;
+
+    if (passval.length < 8) {
+      error4.style.display = "block";
+      error4.innerHTML = "Password must contain at least 8 characters";
+    } else if (!alpha.test(passval) || !digit.test(passval)) {
+      error4.style.display = "block";
+      error4.innerHTML = "Password must contain letters and numbers";
+    } else {
+      error4.style.display = "none";
+      error4.innerHTML = "";
+    }
+
+    if (passval !== cpassval) {
+      error5.style.display = "block";
+      error5.innerHTML = "Passwords do not match";
+    } else {
+      error5.style.display = "none";
+      error5.innerHTML = "";
+    }
+  }
+
+  signform.addEventListener("submit", function (e) {
+    nameValidateChecking();
+    emailValidateChecking();
+    phoneValidateChecking();
+    passValidateChecking();
+
+   
+    if (
+      error1.innerHTML ||
+      error2.innerHTML ||
+      error3.innerHTML ||
+      error4.innerHTML ||
+      error5.innerHTML
+    ) {
+      e.preventDefault(); 
+    }
+  });
+});
+
+
+</script>
