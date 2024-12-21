@@ -4,6 +4,9 @@ const User = require('../models/userSchema')
         User.findById(req.session.user)
         .then(data=>{
             if(data&& !data.isBlocked){
+                console.log(req.session.user)
+                res.locals.user = req.session.user;
+                console.log(res.locals.user)
                 next()
             }else{
                 res.redirect("/login")

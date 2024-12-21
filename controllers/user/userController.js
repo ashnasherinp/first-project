@@ -5,12 +5,15 @@ const bcrypt = require("bcrypt");
 
 const loadHomepage = async (req, res) => {
   try {
-    const user = req.session.user;
+    const user = req.session.user
     if (user) {
-      const userData = await User.findOne({ _id: user._id });
-
+      const userData = await User.findById(user);
+      res.locals.users = userData;
       return res.render("home", { user: userData });
     } else {
+      // const userData = await User.findOne({ _id: user._id });
+      // console.log(userData)
+      // res.locals.user = "Nothin";
       return res.render("home");
     }
   } catch (error) {

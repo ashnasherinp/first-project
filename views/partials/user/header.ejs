@@ -95,9 +95,9 @@
 						<li><a class="nav-link" href="about.html">About us</a></li>
 						<li><a class="nav-link" href="services.html">Services</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
-						<%if(locals.user){%>
+						<%if(locals.users){%>
 							<div class="dropdown">
-								<a href="#" class="sign-in-link"><%=locals.user.name%></a>
+								<a href="#" class="nav-link sign-in-link"><%=locals.users.name%></a>
                                 <div class="dropdown-content">
 									<a href="/userProfile">Profile</a>
 									<a href="/logout">Logout</a>
