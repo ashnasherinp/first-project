@@ -48,6 +48,41 @@ const addBrand = async(req,res)=>{
     }
 }
 
+const blockBrand = async(req,res)=>{
+    try {
+        const id = req.query.id
+        await Brand.updateOne({_id:id},{$set:{isBlocked:true}})
+        res.redirect('/admin/brands')
+        } catch (error) {
+            res.redirect('/pageerror')
+    }
+}
+
+
+const unBlockBrand = async(req,res)=>{
+    try {
+        const id = req.query.id
+        await Brand.updateOne({_id:id},{$set:{isBlocked:false}})
+        res.redirect('/admin/brands')
+        } catch (error) {
+        res.redirect('/pageerror')
+    }
+}
+
+const deleteBrand = async(req,res)=>{
+    try {
+        const{id} = req.query
+        if(!id){
+            return res.status(400).redirect('/pageerror')
+        }
+        await Brand.deleteOne({_id:id})
+        res.redirect('/admin/brands')
+    } catch (error) {
+        console.error("error deleting brand :",error)
+        res.status(500).redirect('/pageerror')
+    }
+}
+
 
 
 
@@ -61,4 +96,7 @@ const addBrand = async(req,res)=>{
 module.exports = {
     getBrandPage,
     addBrand,
+    blockBrand,
+    unBlockBrand,
+    deleteBrand,
 }

@@ -21,16 +21,17 @@ const getProductAddPage = async(req,res)=>{
 }
 
 const addProducts = async(req,res)=>{
-    console.log("working backend")
+   
     try {
-        const products = await Product.findOne({
-            productName:req.body.productName,
+        const products= req.body
+        const productExists = await Product.findOne({
+            productName:products.productName,
              
         })
 
         if(!productExists){
             const images = []
-            if(req.files && files.length>0){
+            if(req.files && req.files.length>0){
                 for(let i=0;i<req.files.length;i++){
                      const originalImagePath = req.files[i].path
 
@@ -46,15 +47,15 @@ const addProducts = async(req,res)=>{
              }
                const newProduct = new Product({
                 productName:products.productName,
-                description:products.products.description,
+                description:products.description,
                 brand:products.brand,
                 category:categoryId._id,
                 regularPrice:products.regularPrice,
                 salePrice :products.salePrice,
                 createdOn:new Date(),
                 quantity:products.quantity,
-                size:products.size,
-                color:products.color,
+                // size:products.size,
+                // color:products.color,
                 productImage:images,
                 status:'Available',
 

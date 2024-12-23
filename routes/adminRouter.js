@@ -35,4 +35,9 @@ router.post('/addBrand',adminAuth,uploads.single('image'),brandController.addBra
 
 router.get('/addProducts',adminAuth,productController.getProductAddPage)
 router.post('/addProducts',adminAuth,uploads.array('images',4),productController.addProducts)
+router.get('/blockBrand',adminAuth,brandController.blockBrand)
+router.get('/unBlockBrand',adminAuth,brandController.unBlockBrand)
+router.get('/deleteBrand',adminAuth,brandController.deleteBrand)
+
+
 module.exports = router 

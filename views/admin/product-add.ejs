@@ -30,7 +30,7 @@
            <div class="col-lg-6">
                <div class="card mb-4">
                    <div class="card-body">
-                       <form method="" action="/admin/addProducts" enctype="multipart/form-data"
+                       <form method="post" action="/admin/addProducts" enctype="multipart/form-data"
                            onsubmit="return validateForm()">
                            <div class="mb-4">
                                <label for="product_name" class="form-label">Product Name</label>
@@ -87,7 +87,7 @@
                                        <div id="quantity-error" class="error-message"></div>
                                    </div>
                                </div>
-                           </div>
+                           <!-- </div>
                            <div class="row">
                               
                                <div class="col-lg-4">
@@ -98,7 +98,7 @@
                                    <div id="color-error" class="error-message"></div>
                                </div>
                             
-                           </div>
+                           </div> -->
                            <div class="card mb-4">
                                <div class="card-body">
                                    <div class="row gx-2">
@@ -323,7 +323,7 @@
               const brand = document.getElementsByName('brand')[0].value;
               const price = document.getElementsByName('regularPrice')[0].value;
               const saleprice = document.getElementsByName('salePrice')[0].value;
-              const color = document.getElementsByName('color')[0].value;
+            //   const color = document.getElementsByName('color')[0].value;
               const category = document.getElementsByName('category')[0].value;
               const images = document.getElementById('input1')
               const quantity=document.getElementsByName('quantity')
@@ -374,10 +374,10 @@
    }
   
   
-              if (color.trim() === "") {
-                  displayErrorMessage('color-error', 'Please enter a color.');
-                  isValid = false;
-              }
+            //   if (color.trim() === "") {
+            //       displayErrorMessage('color-error', 'Please enter a color.');
+            //       isValid = false;
+            //   }
   
   
               if (images.files.length === 0) {
