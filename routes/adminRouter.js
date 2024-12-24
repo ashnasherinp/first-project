@@ -39,5 +39,13 @@ router.get('/blockBrand',adminAuth,brandController.blockBrand)
 router.get('/unBlockBrand',adminAuth,brandController.unBlockBrand)
 router.get('/deleteBrand',adminAuth,brandController.deleteBrand)
 router.get('/products',adminAuth,productController.getAllProducts)
+router.post('/addProductOffer',adminAuth,productController.addProductOffer)
+router.post('/removeProductOffer',adminAuth,productController.removeProductOffer)
+
+
+
+
+
+
 
 module.exports = router 
