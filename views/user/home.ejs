@@ -1,6 +1,6 @@
 
 <%-include("../../views/partials/user/header")%>
-		<!-- Start Hero Section -->
+		<!-- Start Hero Section --> 
 			<div class="hero">
 				<div class="container">
 					<div class="row justify-content-between">
@@ -9,12 +9,12 @@
 								<h1>Find a Signature <span clsas="d-block">Scent you Love</span></h1>
 								<p class="mb-4">Discover the essence of elegance and luxury with Liora’s exquisite collection of perfumes,
                                     designed to captivate and leave a lasting impression..</p>
-								<p><a href="shop.html" class="btn btn-secondary me-2">Shop Now</a><a href="" class="btn btn-white-outline">Explore</a></p>
+								<p><a href="/shop" class="btn btn-secondary me-2">Shop Now</a><a href="" class="btn btn-white-outline">Explore</a></p>
 							</div>
 						</div>
 						<div class="col-lg-7">
 							<div class="hero-img-wrap">
-								<img src="image/img 8.jpg" class="img-fluid">
+								<img src="image/img 8.jpg" class="img-fluid" style="width: 600px;height: 470px;">
 							</div>
 						</div>
 					</div>
@@ -26,6 +26,7 @@
 		<div class="product-section">
 			<div class="container">
 				<div class="row">
+					
 
 					<!-- Start Column 1 -->
 					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
@@ -34,13 +35,17 @@
 						<p><a href="shop.html" class="btn">Explore</a></p>
 					</div> 
 					<!-- End Column 1 -->
+					<%for(let i=0;i<products.length;i++){%>
 
 					<!-- Start Column 2 -->
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="cart.html">
-							<img src="image/product-1.png" class="img-fluid product-thumbnail">
-							<h3 class="product-title">Lavender Essence</h3>
-							<strong class="product-price">$530.00</strong>
+
+						<a class="product-item" href="/productDetails?id=<%=products[i]._id%>">
+							<img src="/uploads/re-image/<%=products[i].productImage[0]%>" alt="<%=products[i].productName%>"class="img-fluid product-thumbnail">
+							<!-- <h3 class="product-title">Lavender Essence</h3>
+							<strong class="product-price">$530.00</strong> -->
+							<h5><%=products[i].productName%></h5>
+							<h6 class="product-price">RS <%=products[i].salePrice%></h6>
 
 							<span class="icon-cross">
 								<img src="images/cross.svg" class="img-fluid">
@@ -50,33 +55,39 @@
 					<!-- End Column 2 -->
 
 					<!-- Start Column 3 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="cart.html">
-							<img src="image/product -2.png" class="img-fluid product-thumbnail">
-							<h3 class="product-title">Golden Bloom</h3>
-							<strong class="product-price">$728.00</strong>
+					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item" href="/productDetails?id=<%=products[i]._id%>">
+							<img src="/uploads/re-image/<%=products[i].productImage[0]%>" alt="<%=products[i].productName%>" class="img-fluid product-thumbnail"> -->
+							<!-- <h3 class="product-title">Golden Bloom</h3>
+							<strong class="product-price">$728.00</strong> -->
+							<!-- <h5><%=products[i].productName%></h5>
+							<h6><%=products[i].salePrice%></h6> -->
 
-							<span class="icon-cross">
+							<!-- <span class="icon-cross">
 								<img src="images/cross.svg" class="img-fluid">
 							</span>
 						</a>
-					</div>
+					</div> -->
 					<!-- End Column 3 -->
 
 					<!-- Start Column 4 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="cart.html">
-							<img src="image/product-4.png" class="img-fluid product-thumbnail">
-							<h3 class="product-title">Viel Essence</h3>
-							<strong class="product-price">$433.00</strong>
-
+					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item" href="/productDetails?id=<%=products[i]._id%>">
+							<img src="/uploads/re-image/<%=products[i].productImage[0]%>" alt="<%=products[i].productName%>" class="img-fluid product-thumbnail"> -->
+							<!-- <h3 class="product-title">Viel Essence</h3>
+							<strong class="product-price">$433.00</strong> -->
+							<!-- <h5><%=products[i].productName%></h5>
+							<h6><%=products[i].salePrice%></h6> -->
+<!-- 
 							<span class="icon-cross">
 								<img src="images/cross.svg" class="img-fluid">
 							</span>
 						</a>
-					</div>
+					</div> -->
+					<!-- <h6><%=products[i].productName%></h6>
+					<h5><%=products[i].salePrice%></h5> -->
 					<!-- End Column 4 -->
-
+                 <%}%>
 				</div>
 			</div>
 		</div>
@@ -96,7 +107,7 @@
 									<div class="icon">
 										<img src="images/truck.svg" alt="Image" class="imf-fluid">
 									</div>
-									<h3>Fast &amp; Free Shipping</h3>
+									<h3>Fast &amp; Free Shipping</h3> 
 									<p>Indulge in effortless elegance. 
                                         Discover your perfect fragrance quickly.
                                          A timeless scent awaits.</p>
@@ -178,7 +189,7 @@
                                 ingredients </li>
 							<li>A timeless fragrance that embodies elegance and individuality</li>
 						</ul>
-						<p><a herf="shop.html" class="btn">Explore</a></p>
+						<p><a herf="/shop" class="btn">Explore</a></p>
 					</div>
 				</div>
 			</div>
@@ -186,7 +197,7 @@
 		<!-- End We Help Section -->
 
 		<!-- Start Popular Product -->
-		<div class="popular-product">
+		<!-- <div class="popular-product">
 			<div class="container">
 				<div class="row">
 
@@ -231,7 +242,7 @@
 
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- End Popular Product -->
 
 		<!-- Start Testimonial Slider -->
@@ -333,7 +344,7 @@
 		<!-- End Testimonial Slider -->
 
 		<!-- Start Blog Section -->
-		<div class="blog-section">
+		<!-- <div class="blog-section">
 			<div class="container">
 				<div class="row mb-5">
 					<div class="col-md-6">
@@ -351,9 +362,9 @@
 							<a href="#" class="post-thumbnail"><img src="image/product-3.png" alt="Image" class="img-fluid"></a>
 							<div class="post-content-entry">
 								<h3><a href="#">Aurora Essence</a></h3>
-								<div class="meta">
+								<div class="meta"> -->
 									<!-- <span>by <a href="#">Kristin Watson</a></span> <span>on <a href="#">Dec 19, 2021</a></span> -->
-								</div>
+								<!-- </div>
 							</div>
 						</div>
 					</div>
@@ -363,8 +374,8 @@
 							<a href="#" class="post-thumbnail"><img src="image/product 5.png" alt="Image" class="img-fluid"></a>
 							<div class="post-content-entry">
 								<h3><a href="#">Rosewood Charm</a></h3>
-								<div class="meta">
-									<!-- <span>by <a href="#">Robert Fox</a></span> <span>on <a href="#">Dec 15, 2021</a></span> -->
+								<div class="meta"> -->
+									<!-- <span>by <a href="#">Robert Fox</a></span> <span>on <a href="#">Dec 15, 2021</a></span>
 								</div>
 							</div>
 						</div>
@@ -375,16 +386,16 @@
 							<a href="#" class="post-thumbnail"><img src="image/product 6.png" alt="Image" class="img-fluid"></a>
 							<div class="post-content-entry">
 								<h3><a href="#">Ethereal Bliss</a></h3>
-								<div class="meta">
+								<div class="meta"> -->
 									<!-- <span>by <a href="#">Kristin Watson</a></span> <span>on <a href="#">Dec 12, 2021</a></span> -->
-								</div>
+								<!-- </div>
 							</div>
 						</div>
 					</div>
 
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- End Blog Section -->	
 
 

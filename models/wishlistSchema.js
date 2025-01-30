@@ -13,6 +13,7 @@ const wishlistSchema = new Schema({
             ref:"product",
             required: true
         },
+       
         addedOn :{
             type:Date,
             default:Date.now

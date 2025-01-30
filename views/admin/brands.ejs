@@ -107,7 +107,7 @@
                     <%}%>
                   </td>
                   <td class="text-start">
-                    <%if(brand.isBlocked===false){%>
+                    <!-- <%if(brand.isBlocked===false){%>
                     <button class="btn btn-danger" style="width: 90px">
                       <a href="/admin/blockBrand?id=<%=brand._id%>" class="text-white">Block</a>
                     </button>
@@ -116,7 +116,18 @@
                     <button class="btn btn-success" style="width: 90px">
                       <a href="/admin/UnblockBrand?id=<%=brand._id%>" class="text-white">Unblock</a>
                     </button>
-                    <%}%>
+                    <%}%> -->
+
+
+                    <%if(brand.isBlocked===false){%>
+                      <button class="btn btn-danger" style="width: 90px" onclick="return confirmBlockUnblock('/admin/blockBrand?id=<%=brand._id%>')">
+                        Block
+                      </button>
+                      <%}else{%>
+                      <button class="btn btn-success" style="width: 90px" onclick="return confirmBlockUnblock('/admin/unblockBrand?id=<%=brand._id%>')">
+                        Unblock
+                      </button>
+                      <%}%>
 
                     <button
                       class="btn btn-danger"
@@ -138,9 +149,48 @@
   <div class="pagination-container">
 </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  function confirmDelete(){
-    return confirm('Are you sure you want to delete this')
+  // function confirmDelete(){
+  //   return confirm('Are you sure you want to delete this')
+  // }
+
+
+  
+  // SweetAlert confirmation for Block/Unblock
+  function confirmBlockUnblock(url) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to block/unblock this brand?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url; // Redirect to the action URL
+      }
+    });
+    return false; // Prevent default action until confirmed
+  }
+
+  // SweetAlert confirmation for Delete Action
+  function confirmDelete(url) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to delete this brand permanently?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url; // Redirect to the delete action URL
+      }
+    });
+    return false; // Prevent default action until confirmed
   }
 </script>
 <%- include("../../views/partials/admin/footer") %>

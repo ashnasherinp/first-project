@@ -60,7 +60,6 @@ const customerInfo = async (req, res) => {
 
         const limit = 3;
         
-        // Fetch filtered user data with pagination
         const userData = await User.find({
             isAdmin: false,
             $or: [
@@ -72,7 +71,6 @@ const customerInfo = async (req, res) => {
         .skip((page - 1) * limit)
         .exec();
 
-        // Count total documents for pagination
         const count = await User.find({
             isAdmin: false,
             $or: [
@@ -81,7 +79,6 @@ const customerInfo = async (req, res) => {
             ],
         }).countDocuments();
 
-        // Pass userData and count to the EJS view
         res.render('customers', { data: userData, totalPages: Math.ceil(count / limit), currentPage: page });
     } catch (error) {
         console.error(error);

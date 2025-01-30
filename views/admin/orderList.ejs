@@ -1,0 +1,133 @@
+
+
+ <style>
+    /* Custom CSS for this page */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7f6;
+      color: #333;
+    }
+    .container { width: 90%; margin: 20px auto; max-width: 1200px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    .filters select, .filters input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none; width: 200px; max-width: 100%; }
+    .filters button { background-color: #3498db; color: #fff; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s ease; }
+    .filters button:hover { background-color: #2980b9; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    table th { background-color: #3498db; color: #fff; position: sticky; top: 0; }
+    table tr:hover { background-color: #f9f9f9; }
+    .actions { display: flex; gap: 10px; }
+    .actions button { padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; }
+    .view-btn { background-color: #2ecc71; color: #fff; }
+    .edit-btn { background-color: #f39c12; color: #fff; }
+    .cancel-btn { background-color: #e74c3c; color: #fff; }
+    .delete-btn { background-color: #16a085; color: #fff; }
+    @media (max-width: 768px) {
+      .filters { flex-direction: column; }
+      .filters select, .filters input { width: 100%; }
+      table th, table td { font-size: 14px; }
+    }
+  </style>
+  
+  <body>
+    <%- include("../../views/partials/admin/header") %>
+  
+    <div class="container">
+      <div class="header">
+        <h1>Order List</h1>
+      </div>
+  
+      <!-- Search and Filter Section -->
+      <div class="filters">
+        <form action="/admin/orders" method="GET">
+          <input type="text" name="search" placeholder="Search by Order ID or Customer">
+          <select name="status">
+            <option value="all">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Return Requested">Return Requested</option>
+          </select>
+          <select name="sort">
+            <option value="date">Sort by Date</option>
+            <option value="amount">Sort by Amount</option>
+          </select>
+          <button type="submit">Filter</button>
+        </form>
+      </div>
+  
+      <!-- Orders Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Product Name</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+             
+
+              <th>Actions</th>
+              <th>Cancel</th>
+              <th>View</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+            <tr>
+              <td><%= order.orderId %></td>
+              <td><%= order.user.name %></td> 
+              <td><%= order.orderedItems.map(item => item.product.productName).join(', ') %></td>
+              <td><%= new Date(order.createdOn).toLocaleDateString() %></td>
+              <td>₹<%= order.totalPrice.toLocaleString('en-IN') %></td>
+              <td>
+                <form action="/admin/update-order-status/<%= order._id %>" method="POST">
+                  <select name="status" onchange="this.form.submit()" <%= order.status === 'Delivered' ? 'disabled' : '' %>>
+                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                    <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                    <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    <option value="Returned" <%= order.status === 'Returned' ? 'selected' : '' %>>Returned</option>
+                  </select>
+                </form>
+              </td>
+              <td class="text-danger">
+                <% order.orderedItems.forEach(function(item) { %>
+                  <% if(item.status === 'Return Requested') { %>
+                    <%= item.status %>
+                  <% } %>
+                <% }); %>
+              </td>
+            
+              <td class="actions">
+                <form action="/admin/orders/cancel/<%= order._id %>" method="POST">
+                  <button type="submit" class="cancel-btn" <%= order.status === 'Cancelled' ? 'disabled' : '' %>>Cancel</button>
+                </form>
+              </td>
+              <td>
+               
+                <form action="/admin/orders/view-order/<%= order._id %>" method="GET">
+                  <button   >View</button>
+                </form>
+              </td>
+            
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+  
+     
+    </div>
+  
+    <%- include("../../views/partials/admin/footer") %>
+  </body>
+  

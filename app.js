@@ -39,9 +39,11 @@ app.use(passport.session())
 
 app.set('view engine','ejs')
 app.set('views',[path.join(__dirname,'views/user'),path.join(__dirname,'views/admin')])
-// app.set("views",path.join(__dirname,"views"))
 app.use(express.static('public'))
-
+app.use((req, res, next) => {
+    res.locals.users = req.session.user || null; 
+    next();
+  });
 
 
 app.use('/',userRouter)

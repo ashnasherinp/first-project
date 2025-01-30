@@ -185,7 +185,7 @@
 
       <!-- Continue with Google Button -->
       <a href="/auth/google" class="google-btn">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
+        <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo"> -->
         Continue with Google
       </a>
 
@@ -322,7 +322,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const emailid = document.getElementById("email");
   const phoneid = document.getElementById("phone");
   const passid = document.getElementById("password");
-  const cpassid = document.getElementById("confirmPassword");
+  const cpassid = document.getElementById("confirmpassword");
+
   const error1 = document.getElementById("error1");
   const error2 = document.getElementById("error2");
   const error3 = document.getElementById("error3");
@@ -357,45 +358,88 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // function phoneValidateChecking() {
+  //   const phoneval = phoneid.value.trim();
+  //   if (phoneval === "") {
+  //     error3.style.display = "block";
+  //     error3.innerHTML = "Enter a valid phone number";
+  //   } else if (phoneval.length !== 10 || isNaN(phoneval)) {
+  //     error3.style.display = "block";
+  //     error3.innerHTML = "Enter a valid 10-digit phone number";
+  //   } else if (/^0{10}$/.test(phoneval)) {
+  //   error3.style.display = "block";
+  //   error3.innerHTML = "Phone number cannot be all zeros";
+    
+  //    } else {
+  //     error3.style.display = "none";
+  //     error3.innerHTML = "";
+  //   }
+  // }
+
   function phoneValidateChecking() {
-    const phoneval = phoneid.value.trim();
-    if (phoneval === "") {
-      error3.style.display = "block";
-      error3.innerHTML = "Enter a valid phone number";
-    } else if (phoneval.length !== 10 || isNaN(phoneval)) {
-      error3.style.display = "block";
-      error3.innerHTML = "Enter a valid 10-digit phone number";
-    } else {
-      error3.style.display = "none";
-      error3.innerHTML = "";
-    }
-  }
+  const phoneval = phoneid.value.trim();
+  const phonePattern = /^[0-9]{10}$/; // Only 10-digit numbers
 
+  if (!phonePattern.test(phoneval)) {
+    error3.style.display = "block";
+    error3.innerHTML = "Enter a valid 10-digit phone number";
+  } else if (/^0{10}$/.test(phoneval)) {
+    error3.style.display = "block";
+    error3.innerHTML = "Phone number cannot be all zeros";
+  } else {
+    error3.style.display = "none";
+    error3.innerHTML = "";
+  }
+}
+
+
+  // function passValidateChecking() {
+  //   const passval = passid.value.trim();
+  //   const cpassval = cpassid.value.trim();
+  //   const alpha = /[a-zA-Z]/;
+  //   const digit = /\d/;
+
+  //   if (passval.length < 8) {
+  //     error4.style.display = "block";
+  //     error4.innerHTML = "Password must contain at least 8 characters";
+  //   } else if (!alpha.test(passval) || !digit.test(passval)) {
+  //     error4.style.display = "block";
+  //     error4.innerHTML = "Password must contain letters and numbers";
+  //   } else {
+  //     error4.style.display = "none";
+  //     error4.innerHTML = "";
+  //   }
+
+  //   if (passval !== cpassval) {
+  //     error5.style.display = "block";
+  //     error5.innerHTML = "Passwords do not match";
+  //   } else {
+  //     error5.style.display = "none";
+  //     error5.innerHTML = "";
+  //   }
+  // }
   function passValidateChecking() {
-    const passval = passid.value.trim();
-    const cpassval = cpassid.value.trim();
-    const alpha = /[a-zA-Z]/;
-    const digit = /\d/;
+  const passval = passid.value.trim();
+  const cpassval = cpassid.value.trim();
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    if (passval.length < 8) {
-      error4.style.display = "block";
-      error4.innerHTML = "Password must contain at least 8 characters";
-    } else if (!alpha.test(passval) || !digit.test(passval)) {
-      error4.style.display = "block";
-      error4.innerHTML = "Password must contain letters and numbers";
-    } else {
-      error4.style.display = "none";
-      error4.innerHTML = "";
-    }
-
-    if (passval !== cpassval) {
-      error5.style.display = "block";
-      error5.innerHTML = "Passwords do not match";
-    } else {
-      error5.style.display = "none";
-      error5.innerHTML = "";
-    }
+  if (!passwordPattern.test(passval)) {
+    error4.style.display = "block";
+    error4.innerHTML = "Password must be 8+ characters with uppercase, lowercase, number & special character";
+  } else {
+    error4.style.display = "none";
+    error4.innerHTML = "";
   }
+
+  if (passval !== cpassval) {
+    error5.style.display = "block";
+    error5.innerHTML = "Passwords do not match";
+  } else {
+    error5.style.display = "none";
+    error5.innerHTML = "";
+  }
+}
+
 
   signform.addEventListener("submit", function (e) {
     nameValidateChecking();

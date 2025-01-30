@@ -1,0 +1,932 @@
+
+ 
+    <%- include("../../views/partials/admin/header") %>
+
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+
+        /* Header Styles */
+        .dashboard-header {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .header-title p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .download-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .download-btn i {
+            margin-right: 5px;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+
+        .filter-group label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        #applyFilter {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #removeFilter {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Stats Grid Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .trend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .trend.up i {
+            color: #28a745;
+            margin-right: 5px;
+        }
+
+        .trend.down i {
+            color: #dc3545;
+            margin-right: 5px;
+        }
+
+        /* Sales Table Styles */
+        .sales-table {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sales-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sales-table th, .sales-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sales-table th {
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .sales-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status.pending {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .status.completed {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .status.cancelled {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>Sales Analytics</h1>
+                    <p>Monitor your business performance in real-time</p>
+                </div>
+                <button class="download-btn" id="downloadPdfBtn" style="margin-left: 27vw;" >
+                    <i class="fas fa-file-pdf"></i>
+                    Export PDF
+                </button>
+                <button class="download-btn" id="downloadExcelBtn">
+                    <i class="fas fa-file-excel"></i>
+                    Export Excel
+                </button>
+            </div>
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label>Quick Filter</label>
+                    <select id="quickFilter">
+                        <option value="none" selected>No Filter</option> 
+                        <option value="today">Daily</option>
+                        <option value="week">Weekly</option>
+                        <option value="month">Monthly</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="filter-group">
+                    <label>End Date</label>
+                    <input type="date" id="endDate">
+                </div>
+                <button id="applyFilter" style="margin-top: 1.5rem;">Apply Filter</button>
+                 <a href="/admin/loadDashboard"><button id="removeFilter" style="margin-top: 1.5rem;">Remove Filter</button></a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-lg">₹</i>
+                </div>
+                <h3>Total Sales</h3>
+                <div class="value" id="totalSales"><%= totalSales %></div>
+                <div class="trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12.5% vs last period</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                </div>
+                <h3>Orders Count</h3>
+                <div class="value" id="totalOrders"><%= totalOrders %></div>
+                <div class="trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>8.2% vs last period</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tags fa-lg"></i>
+                </div>
+                <h3>Total Users</h3>
+                <div class="value"><%= totalUsers %></div>
+                <div class="trend down">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>4.3% vs last period</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class=" fas fa-chart-line fa-lg"></i>
+                </div>
+                <h3>Total Products</h3>
+                <div class="value" ><%= totalProducts %></div>
+                <div class="trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>3.7% vs last period</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percent fa-lg"></i>
+                </div>
+                <h3>Total Discount</h3>
+                <div class="value"><%= totalDiscount %></div>
+                <div class="trend up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12.5% vs last period</span>
+                </div>
+            </div>
+        </div>
+
+
+      
+        <div class="sales-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Discount</th>
+                        <!-- <th>Coupon</th> -->
+                        <th>Final Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <% orders.forEach(order => { %>
+                    <tr>
+                        <td><%= order.orderId %></td>
+                        <td><%= new Date(order.createdOn).toLocaleDateString('en-US',{ year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                        <td>₹<%= order.totalPrice %></td>
+                        <td>₹<%= order.discount %></td>
+                        <!-- <td><%= order.couponApplied ? order.couponApplied : '-' %></td> -->
+                        <td>₹<%= order.finalAmount || order.totalPrice %></td>
+                        <td>
+                            <span class="status <%= order.status %>">
+                                <%= order.status %>
+                            </span>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+<br>
+            <!-- Chart Container -->
+    <div id="chartContainer" style="margin-top: 20px;">
+        <canvas id="salesChart" width="400" height="200"></canvas>
+    </div>
+
+<br>
+                   <!-- Top 10 Products -->
+    <h3>Top 10 Products by Sales</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Total quantity</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tbody>
+                <% bestSellingProducts.forEach(product => { %>
+                    <tr>
+                        <td><%= product.productName %></td>
+                        <td><%= product.totalQuantity %></td>
+                        <td><%= product.totalRevenue.toFixed(2) %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+
+
+
+
+
+  
+        </tbody>
+    </table>
+    <br>
+    <h3>Top 10 Brands by Total Products Sold and Revenue</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Brand Name</th>
+                <th>Total Products Sold</th>
+                <th>Total Revenue (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% topBrands.forEach(brand => { %>
+                <tr>
+                    <td><%= brand.brand %></td>
+                    <td><%= brand.totalQuantity %></td>
+                    <td><%= brand.totalRevenue.toLocaleString('en-IN') %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <br>
+     
+    
+
+    <h3>Top 10 Categories by Total Products Sold and Revenue</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Category Name</th>
+            <th>Total Products Sold</th>
+            <th>Total Revenue (₹)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% topCategories.forEach(category => { %>
+            <tr>
+                <td><%= category.category %></td>
+                <td><%= category.totalQuantity %></td>
+                <td><%= category.totalRevenue.toLocaleString('en-IN') %></td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+
+   
+
+
+
+
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get today's date in the format 'YYYY-MM-DD'
+        const today = new Date().toISOString().split('T')[0];
+    
+        document.getElementById('applyFilter').addEventListener('click', async () => {
+            const quickFilter = document.getElementById('quickFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+    
+            // Validate date input
+            if (new Date(startDate) > new Date(endDate)) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Start date must be before end date!',
+                });
+                return;
+            }
+    
+          
+    
+            try {
+
+
+               
+                // Fetch filtered data from the server
+                const response = await fetch('/admin/dashboard', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quickFilter, startDate, endDate })
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+    
+                const data = await response.json();
+    
+                // Insert data for orders table
+                const ordersTableBody = document.getElementById('ordersTableBody');
+                ordersTableBody.innerHTML = '';
+                data.orders.forEach(order => {
+                    const row = `<tr>
+                        <td>${order._id}</td>
+                        <td>${new Date(order.createdOn).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                        <td>₹${order.totalPrice}</td>
+                        <td>₹${order.discount}</td>
+                        <td>₹${order.finalAmount ? order.finalAmount : order.totalPrice}</td>
+                        <td><span class="status ${order.status}">${order.status}</span></td>
+                    </tr>`;
+                    ordersTableBody.insertAdjacentHTML('beforeend', row);
+                });
+
+
+                //new code  updating total sales and total orders
+                const totalSales = document.getElementById("totalSales");
+                totalSales.innerHTML = data.totalSales;
+                const totalOrders = document.getElementById("totalOrders");
+                totalOrders.innerHTML = data.totalOrders;
+
+    
+                // Update the chart with filtered data
+                updateChartWithFilteredData(data.orders);
+    
+                // Hide loading indicator once the data is loaded
+                document.getElementById('loadingIndicator').style.display = 'none';
+    
+                // Success message using SweetAlert
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Data loaded successfully!',
+                    text: 'The data has been successfully filtered.',
+                });
+            } catch (error) {
+                // Hide loading indicator if there is an error
+                document.getElementById('loadingIndicator').style.display = 'none';
+    
+                // Show SweetAlert for error
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text:` Something went wrong: ${error.message}`,
+                });
+            }
+        });
+    });
+    
+    // Function to update the chart with filtered data
+    function updateChartWithFilteredData(filteredOrders) {
+        const labels = filteredOrders.map(order => new Date(order.createdOn).toLocaleDateString('en-US',{ day: 'numeric', month: 'short', year: 'numeric' }));
+        const data = filteredOrders.map(order => order.finalAmount || order.totalPrice);
+    
+        // Call the initializeChart function to update the chart
+        initializeChart(labels, data);
+    }
+    
+    // Function to initialize and create the chart
+    let salesChart;
+    
+    function initializeChart(labels, data) {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+    
+        if (salesChart) {
+            salesChart.destroy();  // Destroy previous chart instance to avoid overlapping charts
+        }
+    
+        salesChart = new Chart(ctx, {
+            type: 'bar',  // Change the chart type if needed
+            data: {
+                labels: labels,  // X-axis labels (for example, order dates)
+                datasets: [{
+                    label: 'Sales Amount (₹)',  // Label for the chart
+                    data: data,  // Data (for example, sales amount per order)
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    </script>
+    
+
+
+
+
+
+<!--filtering latest-->>
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get today's date in the format 'YYYY-MM-DD'
+        const today = new Date().toISOString().split('T')[0];
+
+        document.getElementById('applyFilter').addEventListener('click', async () => {
+            const quickFilter = document.getElementById('quickFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // Validate date input
+            if (new Date(startDate) > new Date(endDate)) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Start date must be before end date!',
+                });
+                return;
+            }
+
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+
+            try {
+                // Fetch filtered data from the server
+                const response = await fetch('/admin/dashboard', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quickFilter, startDate, endDate })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // Insert data for orders table
+                const ordersTableBody = document.getElementById('ordersTableBody');
+                ordersTableBody.innerHTML = '';
+                data.orders.forEach(order => {
+                    const row = `<tr>
+                        <td>${order._id}</td>
+                        <td>${new Date(order.createdOn).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                        <td>₹${order.totalPrice}</td>
+                        <td>₹${order.discount}</td>
+                        <td>₹${order.finalAmount ? order.finalAmount : order.totalPrice}</td>
+                        <td><span class="status ${order.status}">${order.status}</span></td>
+                    </tr>`;
+                    ordersTableBody.insertAdjacentHTML('beforeend', row);
+                });
+
+                
+                // Hide loading indicator once the data is loaded
+                document.getElementById('loadingIndicator').style.display = 'none';
+
+                // Success message using SweetAlert
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Data loaded successfully!',
+                    text: 'The data has been successfully filtered.',
+                });
+            } catch (error) {
+                // Hide loading indicator if there is an error
+                document.getElementById('loadingIndicator').style.display = 'none';
+
+                // Show SweetAlert for error
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: Something went wrong: ${error.message},
+                });
+            }
+        });
+    });
+</script> -->
+
+
+
+
+
+
+
+<!--filtering latest -->
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get today's date in the format 'YYYY-MM-DD'
+        const today = new Date().toISOString().split('T')[0];
+    
+        // Set the minimum date for the start date input
+        // document.getElementById('startDate').setAttribute('min', today);
+    
+        document.getElementById('applyFilter').addEventListener('click', async () => {
+            const quickFilter = document.getElementById('quickFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+    
+            // Validate date input
+            if (new Date(startDate) > new Date(endDate)) {
+                // Show SweetAlert instead of normal alert
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Start date must be before end date!',
+                });
+                return;
+            }
+    
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+    
+            try {
+                // Fetch filtered data from the server
+                const response = await fetch('/admin/dashboard', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quickFilter, startDate, endDate })
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+    
+                const data = await response.json();
+                const ordersTableBody = document.getElementById('ordersTableBody');
+                ordersTableBody.innerHTML = '';
+    
+                // Insert orders into table
+                data.orders.forEach(order => {
+                    const row = `<tr>
+                        <td>${order._id}</td>
+                        <td>${new Date(order.createdOn).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                        <td>₹${order.totalPrice}</td>
+                        <td>₹${order.discount}</td>
+                        <td>₹${order.finalAmount ? order.finalAmount : order.totalPrice}</td>
+                        <td><span class="status ${order.status}">${order.status}</span></td>
+                    </tr>`;
+                    ordersTableBody.insertAdjacentHTML('beforeend', row);
+                });
+    
+                // Hide loading indicator once the data is loaded
+                document.getElementById('loadingIndicator').style.display = 'none';
+    
+                // Success message using SweetAlert
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Data loaded successfully!',
+                    text: 'Orders have been successfully filtered.',
+                });
+    
+            } catch (error) {
+                // Hide loading indicator if there is an error
+                document.getElementById('loadingIndicator').style.display = 'none';
+    
+                // Show SweetAlert for error
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: Something went wrong: ${error.message},
+                });
+            }
+        });
+    });
+    </script> -->
+
+
+<script>
+
+
+
+
+//generate pdf
+
+document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
+    const quickFilter = document.getElementById('quickFilter').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    const queryParams = new URLSearchParams({
+        quickFilter,
+        startDate,
+        endDate
+    }).toString();
+
+    window.location.href = `/admin/dashboard/download/pdf?${queryParams}`;
+});
+
+
+
+//generate excel
+document.getElementById('downloadExcelBtn').addEventListener('click', () => {
+    const quickFilter = document.getElementById('quickFilter').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // Build the URL with query parameters based on filters
+    let url = '/admin/dashboard/download/excel?';
+    if (quickFilter) url += `quickFilter=${quickFilter}&`;
+    if (startDate) url += `startDate=${startDate}&`;
+    if (endDate) url += `endDate=${endDate}&`;
+
+    // Remove the last '&' if any
+    url = url.slice(0, -1);
+
+    // Redirect to the URL to trigger the report download
+    window.location.href = url;
+});
+
+
+
+
+
+</script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+ <!-- Top 10 Brands -->
+    <!-- <h2>Top 10 Brands by Product Count</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Brand Name</th>
+                <th>Product Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% topBrands.forEach(brand => { %>
+                <tr>
+                    <td><%= brand._id %></td>
+                    <td><%= brand.productCount %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table> -->
+
+    <!-- Top 10 Categories -->
+    <!-- <h2>Top 10 Categories by Product Count</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Product Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% topCategories.forEach(category => { %>
+                <tr>
+                    <td><%= category._id %></td>
+                    <td><%= category.productCount %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+//filtering new latest
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Get today's date in the format 'YYYY-MM-DD'
+//     const today = new Date().toISOString().split('T')[0];
+
+//     // Set the minimum date for the start date input
+//     // document.getElementById('startDate').setAttribute('min', today);
+
+//     document.getElementById('applyFilter').addEventListener('click', async () => {
+//         const quickFilter = document.getElementById('quickFilter').value;
+//         const startDate = document.getElementById('startDate').value;
+//         const endDate = document.getElementById('endDate').value;
+
+//         // Fetch filtered data from the server
+//         const response = await fetch('/admin/dashboard', {
+//             method: "POST",
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ quickFilter, startDate, endDate })
+//         });
+
+//         const data = await response.json();
+//         const ordersTableBody = document.getElementById('ordersTableBody');
+//         ordersTableBody.innerHTML = '';
+
+//         data.orders.forEach(order => {
+//             console.log("order.createdOn : ",order.createdOn);
+//             const row = `<tr>
+//                 <td>${order._id}</td>
+//                 <td>${new Date(order.createdOn).toLocaleDateString('en-US',{ year: 'numeric', month: 'long', day: 'numeric' })}</td>
+//                 <td>₹${order.totalPrice}</td>
+//                 <td>₹${order.discount}</td>
+//                 <td>₹${order.finalAmount ? order.finalAmount : order.totalPrice}</td>
+//                 <td><span class="status ${order.status}">${order.status}</span></td>
+//             </tr>`;
+//             ordersTableBody.insertAdjacentHTML('beforeend', row);
+//         });
+//     });
+// });
+
+</script>
+
+
+<%- include("../../views/partials/admin/footer") %>

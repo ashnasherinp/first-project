@@ -1,0 +1,92 @@
+
+
+
+<%- include("../../views/partials/user/header") %>
+<main class="main">
+    <div class="container mt-50">
+        <h2>Your Cart</h2>
+        <% if (cart && cart.items.length > 0) { %>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <br>
+                <tbody>
+                    <% cart.items.forEach(function(item) { %>
+                        <tr>
+                            <td>
+                                <img src="/uploads/re-image/<%= item.productId.productImage[0] %>" alt="<%= item.productId.productName %>" width="50" height="50">
+                                <%= item.productId.productName %>
+                            </td>
+                            <td><%= item.price %></td>
+                            <td>
+                                <button  onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
+                                <span><%= item.quantity %></span>
+                                <button  onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
+                            </td>
+                            <td><%= item.totalPrice %></td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeFromCart('<%= item.productId._id %>')">Remove</button>
+                            </td>
+                        </tr>
+                        <br>
+                    <% }); %>
+                </tbody>
+            </table>
+<br>
+            <div class="cart-summary">
+                <h4>Cart Summary</h4>
+                <p>Total Items: <%= cart.items.length %></p>
+                <p>Total Price: <%= cart.items.reduce((acc, item) => acc + item.totalPrice, 0) %></p>
+                <a href="/checkout" class="btn btn-primary">Proceed to Checkout</a>
+            </div>
+        <% } else { %>
+            <p>Your cart is empty!</p>
+        <% } %>
+    </div>
+</main>
+<%- include("../../views/partials/user/footer") %>
+
+<script>
+  
+
+    function removeFromCart(productId) {
+        $.ajax({
+            url: '/removeFromCart',
+            method: 'POST',
+            data: { productId: productId },
+            success: function(response) {
+                location.reload(); 
+            },
+            error: function(error) {
+                console.error(error);
+                alert('Error removing product from cart');
+            }
+        });
+    }
+    function updateQuantity(productId, change) {
+    change = Number(change);  
+
+    $.ajax({
+        url: '/updateCartQuantity',
+        method: 'POST',
+        data: { productId: productId, change: change },
+        success: function(response) {
+            location.reload();  
+        },
+        error: function(error) {
+            console.error(error);
+            alert('Error updating quantity.');
+        }
+    });
+}
+
+
+</script>  
+

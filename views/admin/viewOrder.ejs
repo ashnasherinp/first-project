@@ -1,0 +1,244 @@
+<%- include("../../views/partials/admin/header") %>
+
+<h1>View Order - <%= order.orderId %></h1>
+<p><strong>User:</strong> <%= order.user.name %></p>
+<p><strong>Status:</strong> <%= order.status %></p>
+<p><strong>Order Date:</strong> <%= new Date(order.createdOn).toLocaleDateString() %></p>
+
+
+
+<h3>Shipping Address</h3>
+<p><strong>Address Type:</strong> <%= address.addressType %></p>
+<p><strong>Name:</strong> <%= address.name %></p>
+<p><strong>City:</strong> <%= address.city %></p>
+<p><strong>Landmark:</strong> <%= address.landMark %></p>
+<p><strong>State:</strong> <%= address.state %></p>
+<p><strong>Pincode:</strong> <%= address.pincode %></p>
+<p><strong>Phone:</strong> <%= address.phone %></p>
+<% if (address.altPhone) { %>
+  <p><strong>Alternate Phone:</strong> <%= address.altPhone %></p>
+<% } %>
+
+
+<h3>Items</h3>
+<ul class="order-items">
+  <% order.orderedItems.forEach(item => { %>
+    <li class="order-item">
+      <!-- Check if the product image exists -->
+      <% if (item.product.productImage && item.product.productImage.length > 0) { %>
+        <img src="/uploads/re-image/<%= item.product.productImage[0] %>" alt="<%= item.product.productName %>" class="product-photo" />
+      <% } else { %>
+        <img src="/images/default-product-image.jpg" alt="Default Image" class="product-photo" />
+      <% } %>
+
+      <div class="order-details">
+        <p><strong>Product Name:</strong> <%= item.product.productName %></p>
+        <p><strong>Price:</strong> ₹<%= item.price.toLocaleString('en-IN') %> x <%= item.quantity %></p>
+
+        <!-- Display return request status -->
+        <p><strong>Return Status:</strong>
+          <%= item.status === 'Returned' ? 'Returned' :
+          item.status === 'Return Requested' ? 'Return Requested' :
+          item.status === 'Return Rejected' ? 'Return Rejected' : 'Not Requested' %>
+        </p>
+        
+
+        <% if (item.status === 'Return Requested') { %>
+          <!-- If return is requested, show approval/rejection options -->
+          <h5>Return Reason:</h5>
+          <p><%= item.returnReason %></p>
+
+          <!-- Approve return form -->
+          <form action="/admin/approve-return/<%= order._id %>/<%= item.product._id %>" method="POST">
+            <button type="submit" name="action" value="approve" class="btn btn-success">Approve Return</button>
+          </form>
+
+          <!-- Reject return form -->
+          <form action="/admin/reject-return/<%= order._id %>/<%= item.product._id %>" method="POST">
+            <button type="submit" name="action" value="reject" class="btn btn-danger">Reject Return</button>
+          </form>
+        <% } else if (item.status === 'Returned') { %>
+          <!-- If return is approved and item status is 'Returned', show 'Returned' status -->
+          <p><strong>Return Status:</strong> Returned</p>
+        
+        <% } else if (item.status === 'Return Rejected') { %>
+          <!-- If return is rejected, show 'Return Rejected' status -->
+          <p class="text-danger"><strong>Return Status:</strong> Return Rejected</p>
+        <% } %>
+      </div>
+    </li>
+  <% }) %>
+</ul>
+
+<p><strong>Total:</strong> ₹<%= order.totalPrice.toLocaleString('en-IN') %></p>
+
+
+<% if (order.couponApplied) { %>
+  <h4>Coupon Applied:</h4>
+  <p>Coupon Code: <%= order.couponCode  %></p>
+  <p>Discount Amount: ₹<%= order.discount %></p>
+<% } else { %>
+  <h6>No Coupon Applied</h6>
+<% } %>
+
+<%- include("../../views/partials/admin/footer") %>
+<!-- CSS for Styling -->
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fb;
+    margin: 0;
+    padding: 0;
+  }
+
+  .order-items {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-photo {
+    max-width: 150px;
+    height: auto;
+    margin-right: 20px;
+    border-radius: 5px;
+  }
+
+  .order-details {
+    flex: 1;
+    padding-left: 15px;
+  }
+
+  .order-details p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: #444;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+  }
+
+  .btn-warning {
+    background-color: #ffc107;
+    color: white;
+  }
+
+  .btn-warning:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+  }
+
+  .order-status, .return-status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .order-status {
+    margin-top: 10px;
+  }
+
+  .return-status {
+    margin-top: 5px;
+  }
+
+  .order-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .order-summary p {
+    font-size: 16px;
+    color: #333;
+  }
+
+  .order-summary strong {
+    font-size: 18px;
+    color: #222;
+  }
+
+  .order-items li {
+    display: flex;
+    align-items: center;
+  }
+
+  /* For mobile responsiveness */
+  @media (max-width: 768px) {
+    .order-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .product-photo {
+      max-width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .order-details {
+      padding-left: 0;
+    }
+
+    .btn {
+      width: 100%;
+      font-size: 14px;
+    }
+  }
+</style>

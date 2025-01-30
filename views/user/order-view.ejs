@@ -1,0 +1,195 @@
+<%-include("../../views/partials/user/header")%>
+<main class="main">
+    <div class="container">
+      <h1>Order Details</h1>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Order ID: <%= order.orderId %></h5>
+          <p><strong>Status:</strong> <%= order.status %></p>
+          <p><strong>Total:</strong> ₹<%= order.totalPrice %></p>
+          <p><strong>Items:</strong></p>
+          <ul>
+            <% order.orderedItems.forEach((item, index) => { %>
+              <li>
+                <div class="order-item">
+                  <img src="/uploads/re-image/<%= item.product.productImage[0] %>" alt="<%= item.product.productName %>" class="product-photo" />
+                  <div class="product-info">
+                    <p><strong>Name:</strong> <%= item.product.productName %></p>
+                    <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                    <p><strong>Price:</strong> ₹<%= item.price %></p>
+                    <p><strong>Status:</strong> <%= order.status %></p>
+                    <% if (order.status === 'Delivered') { %>
+                      <% if (item.status === 'Returned' || item.status === 'Return Requested' || item.status === 'Return Rejected') { %>
+                        <!-- Display the return status instead of the button -->
+                        <p><strong>Status:</strong> <%= item.status %></p>
+                      <% } else { %>
+                        <!-- Display the return button if not requested for return -->
+                        <button 
+                          class="btn btn-warning btn-sm return-btn" 
+                          data-index="<%= index %>">
+                          Return
+                        </button>
+          
+                        <!-- Return Form (hidden by default) -->
+                        <form 
+                          action="/return-product/<%= order._id %>/<%= item.product._id %>" 
+                          method="POST" 
+                          id="return-form-<%= index %>" 
+                          style="display: none; margin-top: 10px;">
+                          <div class="mb-2">
+                            <label for="reason-<%= index %>">Reason for Return:</label>
+                            <textarea 
+                              name="reason" 
+                              id="reason-<%= index %>" 
+                              class="form-control" 
+                              rows="2" 
+                              required>
+                            </textarea>
+                          </div>
+                          <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </form>
+                      <% } %>
+                    <% } %>
+          
+                  </div>
+                </div>
+              </li>
+            <% }) %>
+          </ul>
+          
+          <p><strong>Shipping Address:</strong></p>
+          <address>
+            <%= order.address.name %><br>
+            <%= order.address.landMark %>, <%= order.address.city %><br>
+            <%= order.address.state %>, <%= order.address.pincode %><br>
+            <%= order.address.phone %><br>
+            <% if (order.address.altPhone) { %>
+              <%= order.address.altPhone %><br>
+            <% } %>
+          </address>
+          <a href="/userProfile" class="btn">Back to profile</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+
+<!-- Embedded Styles -->
+<style>
+ /* General styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+strong {
+  color: #333;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  font-size: 1.1rem;
+  color: #555;
+  list-style-type: none;
+}
+
+address {
+  font-style: normal;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+address br {
+  line-height: 1.4;
+}
+
+/* Button styles */
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Product photo styles */
+.product-photo {
+  width: 100px; /* Adjust width to suit your layout */
+  height: 100px; /* Adjust height to suit your layout */
+  object-fit: cover; /* Ensures the image covers the container without stretching */
+  border-radius: 8px; /* Optional: adds rounded corners to the image */
+  margin-right: 20px; /* Adds spacing between the image and text */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow around the image */
+}
+
+/* Order item container */
+.order-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+</style>
+<script>
+  // JavaScript to toggle the visibility of the return form
+  document.querySelectorAll('.return-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const index = e.target.getAttribute('data-index');
+      const returnForm = document.getElementById(`return-form-${index}`);
+      if (returnForm) {
+        returnForm.style.display = 'block'; // Show the return form
+        e.target.style.display = 'none';   // Hide the return button
+      }
+    });
+  });
+</script>
+
+<%- include("../../views/partials/user/footer") %>

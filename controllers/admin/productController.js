@@ -10,10 +10,12 @@ const sharp = require('sharp')
 const getProductAddPage = async(req,res)=>{
     try {
         const category = await Category.find({isListed:true})
-        const brand = await Brand.find({isBlocked:false})
+        const brand = await Brand.find({isBlocked:false});
+        const products = await Product.find({isBlocked:false})
         res.render("product-add",{
             cat:category,
-            brand:brand
+            brand:brand,
+            product:products,
         })
     } catch (error) {
         res.redirect('/pageerror')
@@ -45,6 +47,9 @@ const addProducts = async(req,res)=>{
                 return res.status(400).join('invalid category name')
 
              }
+
+             const parentValue = products.parent && products.parent !== "" ? products.parent : null;
+
                const newProduct = new Product({
                 productName:products.productName,
                 description:products.description,
@@ -54,7 +59,8 @@ const addProducts = async(req,res)=>{
                 salePrice :products.salePrice,
                 createdOn:new Date(),
                 quantity:products.quantity,
-                // size:products.size,
+                   parent: parentValue,
+                size:products.size,
                 // color:products.color,
                 productImage:images,
                 status:'Available',
@@ -72,6 +78,8 @@ const addProducts = async(req,res)=>{
     }
 
 }
+
+
 
 const getAllProducts = async(req,res)=>{
     // console.log('hey')
@@ -119,42 +127,47 @@ const getAllProducts = async(req,res)=>{
         res.redirect('/pageerror')
     }
 }
-
-const addProductOffer = async(req,res)=>{
+const addProductOffer = async(req, res) => {
     try {
-        const{productId,percentage}=req.body
-        const findProduct = await Product.findOne({_id:productId})
-        const findCategory = await Category.findOne({_id:findProduct.category})
-        if(findCategory.categoryOffer>percentage){
-            return res.json({status:false,message:"This products category already has a category offer"})
+        const { productId, percentage } = req.body;
+        const findProduct = await Product.findOne({ _id: productId });
+        const findCategory = await Category.findOne({ _id: findProduct.category });
+
+        if (findCategory.categoryOffer > percentage) {
+            return res.json({ status: false, message: "This product's category already has a category offer" });
         }
-        findProduct.salePrice =findProduct.salePrice-Math.floor(findProduct.regularPrice*(percentage/100))
-        findProduct.productOffer = parseInt(percentage)
-        await findProduct.save()
-        findCategory.categoryOffer =0
-        await findCategory.save()
-        res.json({status:true})
+
+       
+        findProduct.salePrice -= Math.floor(findProduct.salePrice * (percentage / 100));
+        findProduct.productOffer = parseInt(percentage);
+        await findProduct.save();
+
+      
+        findCategory.categoryOffer = 0;
+        await findCategory.save();
+
+        res.json({ status: true });
     } catch (error) {
-        res.redirect('/pageerror')
-        res.status(500).json({status:false,message:'Internal server error'})
+        res.redirect('/pageerror');
+        res.status(500).json({ status: false, message: 'Internal server error' });
     }
+};
 
-}
-
-const removeProductOffer = async(req,res)=>{
+const removeProductOffer = async (req, res) => {
     try {
-        const {productId} =req.body
-        const findProduct = await Product.findOne({_id:productId})
-        const percentage = findProduct.productOffer
-        findProduct.salePrice = findProduct.salePrice+Math.floor(findProduct.regularPrice*(percentage/100))
-        findProduct.productOffer =0
-        await findProduct.save()
-        res.json({status:true})
-    } catch (error) {
-        res.redirect('/pageerror')
-    }
-}
+        const { productId } = req.body;
+        const findProduct = await Product.findOne({ _id: productId });
 
+      
+        findProduct.salePrice = findProduct.regularPrice;
+        findProduct.productOffer = 0; 
+        await findProduct.save();
+
+        res.json({ status: true });
+    } catch (error) {
+        res.redirect('/pageerror');
+    }
+};
 const blockProduct = async(req,res)=>{
     try {
         let id =req.query.id
@@ -179,13 +192,20 @@ const unblockProduct =async(req,res)=>{
 const getEditProduct = async(req,res)=>{
     try {
         const id = req.query.id
+       
+
         const product = await Product.findOne({_id:id})
         const category = await Category.find({})
+       
         const brand = await Brand.find({})
+        const productList = await Product.find({}); 
+
         res.render('edit-product',{
             product :product,
             cat :category,
             brand:brand,
+            productList: productList,
+            size:product.size,
 
         })
 
@@ -194,48 +214,125 @@ const getEditProduct = async(req,res)=>{
     }
 }
 
-const editProduct = async (req,res)=>{
+// const editProduct = async (req,res)=>{
+//     try {
+//         const id =req.params.id
+//         console.log("Product ID:", id);
+//         const product = await Product.findOne({_id:id})
+//         console.log("Existing Product:", product);
+//         const data = req.body
+//         console.log("Request Body Data:", data);
+//         const existingProduct = await Product.findOne({
+//             productName:data.productName,
+//             _id:{$ne:id}
+
+//         })
+//         console.log("Existing Product with Same Name:", existingProduct);
+//         if(existingProduct){
+//             return res.status(400).json({error:'product with this name already exists. please try with another name'})
+//         }
+//         const images = []
+
+//         if(req.files && req.files.length>0){
+//             for(let i=0;i<req.files.length;i++){
+//                 images.push(req.files[i].filename)
+
+//                 }
+//             }
+
+//             console.log("Uploaded Images:", images);
+
+//             const parentValue = data.parent && data.parent !== "" ? data.parent : null;
+//         const updateFields ={
+//             productName:data.productName,
+//             description:data.description,
+//             brand:data.brand,
+//             category:product.category,
+//             regularPrice:data.regularPrice,
+//             salePrice:data.salePrice,
+//             quantity:data.quantity,
+//             parent: parentValue,
+//             size:data.size
+//         }
+//         console.log("Update Fields:", updateFields);
+//         if(req.files.length>0){
+//             updateFields.$push ={productImage:{$each:images}}
+
+//         }
+//         await Product.findByIdAndUpdate(id,updateFields,{new:true})
+//         res.redirect('/admin/products')
+//     } catch (error) {
+//         console.error(error)
+//         res.redirect('/pageerror')
+//     }
+// }
+const editProduct = async (req, res) => {
     try {
-        const id =req.params.id
-        const product = await Product.findOne({_id:id})
-        const data = req.body
-        const existingProduct = await Product.findOne({
-            productName:data.productName,
-            _id:{$ne:id}
-
-        })
-        if(existingProduct){
-            return res.status(400).json({error:'product with this name already exists. please try with another name'})
+      const id = req.params.id; 
+  
+      const data = req.body; 
+  
+      
+      const existingProduct = await Product.findOne({
+        productName: data.productName,
+        _id: { $ne: id },
+      });
+      if (existingProduct) {
+        return res.status(400).json({
+          error: "Product with this name already exists. Please try with another name.",
+        });
+      }
+  
+      const category = await Category.findOne({ name: data.category });
+      if (!category) {
+        return res.status(400).json({ error: "Invalid category name." });
+      }
+  
+      
+      const images = [];
+      if (req.files && req.files.length > 0) {
+        for (let i = 0; i < req.files.length; i++) {
+          images.push(req.files[i].filename);
         }
-        const images = []
-
-        if(req.files && req.files.length>0){
-            for(let i=0;i<req.files.length;i++){
-                images.push(req.files[i].filename)
-
-                }
-            }
-        const updateFields ={
-            productName:data.productName,
-            description:data.description,
-            brand:data.brand,
-            category:product.category,
-            regularPrice:data.regularPrice,
-            salePrice:data.salePrice,
-            quantity:data.quantity
-        }
-        if(req.files.length>0){
-            updateFields.$push ={productImage:{$each:images}}
-
-        }
-        await Product.findByIdAndUpdate(id,updateFields,{new:true})
-        res.redirect('/admin/products')
+      }
+     
+      
+      const parentValue = data.parent && data.parent !== "" ? data.parent : null;
+  
+      const updateFields = {
+        productName: data.productName,
+        description: data.descriptionData, 
+        brand: data.brand,
+        category: category._id,
+        regularPrice: data.regularPrice,
+        salePrice: data.salePrice,
+        quantity: data.quantity,
+        parent: parentValue,
+        size: data.size,
+      };
+      
+      if (images.length > 0) {
+        await Product.findByIdAndUpdate(
+          id,
+          {
+            $set: updateFields,
+            $push: { productImage: { $each: images } },
+          },
+          { new: true }
+        );
+      } else {
+        await Product.findByIdAndUpdate(id, updateFields, { new: true });
+      }
+  
+      console.log("Product successfully updated!");
+      res.redirect("/admin/products");
     } catch (error) {
-        console.error(error)
-        res.redirect('/pageerror')
+      console.error("Error in editProduct:", error.message, error.stack);
+      res.redirect("/pageerror");
     }
-}
-
+  };
+  
+  
 const deleteSingleImage = async (req,res)=>{
     try {
         const{imageNameToServer,productIdToServer} = req.body

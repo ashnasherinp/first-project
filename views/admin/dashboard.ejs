@@ -1,10 +1,120 @@
 <%- include("../../views/partials/admin/header") %>
-<section class="content-main">
+<!-- <section class="content-main">
     <div class="content-header">
         <div>
             <h2 class="content-title card-title">Dashboard </h2>
         </div>
        
     </div>
-</section>
+</section> -->
+
+
+    <h1>Admin Dashboard</h1>
+
+    <!-- Chart -->
+    <div>
+        <h2>Sales Chart</h2>
+        <select id="filter" onchange="updateChart()">
+            <option value="daily">Daily</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <!-- Top 10 Best-Selling Products -->
+    <h2>Top 10 Best-Selling Products</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Product</th>
+                <th>Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bestSellingProducts.forEach((product, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= product.productName %></td>
+                    <td><%= product.sold %></td>
+                    <td>₹<%= product.revenue %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <!-- Top 10 Best-Selling Categories -->
+    <h2>Top 10 Best-Selling Categories</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Category</th>
+                <th>Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bestSellingCategories.forEach((category, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= category.categoryName %></td>
+                    <td><%= category.sold %></td>
+                    <td>₹<%= category.revenue %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <!-- Top 10 Best-Selling Brands -->
+    <h2>Top 10 Best-Selling Brands</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Brand</th>
+                <th>Sold</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bestSellingBrands.forEach((brand, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= brand.brandName %></td>
+                    <td><%= brand.sold %></td>
+                    <td>₹<%= brand.revenue %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <script>
+      const salesData = `<%- JSON.stringify(salesData || []) %>`;
+
+
+        const ctx = document.getElementById("salesChart").getContext("2d");
+        const salesChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: salesData.map(data => data._id),
+                datasets: [{
+                    label: "Sales",
+                    data: salesData.map(data => data.totalAmount),
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0, 0, 255, 0.1)",
+                    fill: true,
+                }],
+            },
+        });
+
+        function updateChart() {
+            const filter = document.getElementById("filter").value;
+            // Make an API call to fetch filtered data and update the chart
+        }
+    </script>
+
+
 <%- include("../../views/partials/admin/footer") %>
