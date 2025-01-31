@@ -15,6 +15,7 @@ const categoryInfo = async(req,res)=>{
         const categoryData = await Category.find({})
         .sort({createdAt:-1})
         .skip(skip)
+        
         .limit(limit)
         console.log(categoryData)
 
