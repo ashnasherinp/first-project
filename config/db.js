@@ -5,7 +5,6 @@ const connectDB = async () => {
     try {
         // Remove the deprecated option 'useUnifiedTopology'
         await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
             serverSelectionTimeoutMS: 30000  // Timeout after 30 seconds
         });
 
