@@ -135,6 +135,7 @@ const verifyOtp = async (req, res) => {
         password: passwordHash,
       });
       await saveUserData.save();
+      
       req.session.user = saveUserData._id;
       res.json({ success: true, redirectUrl: "/" });
     } else {

@@ -75,33 +75,51 @@ const addToCart = async (req, res) => {
   }
 };
 
-
-
-
-
 const getCart = async (req, res) => {
-    try {
-        const userId = req.session.user
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(400).json({ status: false, message: 'User not found' });
-        }
+  try {
+    const userId = req.session.user;
 
-        const cart = await Cart.findOne({ userId: user._id }).populate('items.productId');
-        if (!cart) {
-            return res.status(404).json({ status: false, message: 'Cart not found' });
-        }
- 
-
- 
-        res.render('cart', { cart });
-    } catch (err) {
-        console.error(err);
-        console.log(err)
-        res.status(500).json({ status: false, message: 'Server error' });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ status: false, message: 'User not found' });
     }
-};
 
+    let cart = await Cart.findOne({ userId: user._id }).populate('items.productId');
+    if (!cart) {
+    
+      cart = new Cart({
+        userId: user._id,
+        items: [],
+      });
+      await cart.save();
+    }
+
+    const maxQuantityPerPerson = 10;
+
+
+    cart.items = cart.items.map((item) => {
+      const product = item.productId;
+      const requestedQuantity = item.quantity;
+
+      if (requestedQuantity > product.quantity) {
+        item.quantity = product.quantity;
+        item.totalPrice = product.salePrice * product.quantity;
+      }
+      if (requestedQuantity > maxQuantityPerPerson) {
+        item.quantity = maxQuantityPerPerson;
+        item.totalPrice = product.salePrice * maxQuantityPerPerson;
+      }
+
+      return item;
+    });
+
+    const totalAmount = cart.items.reduce((total, item) => total + item.totalPrice, 0);
+    res.render('cart', { cart, totalAmount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: false, message: 'Server error' });
+  }
+};
 
 const removeProduct = async (req, res) => {
     try {
