@@ -91,7 +91,9 @@ const getCart = async (req, res) => {
         if (!cart) {
             return res.status(404).json({ status: false, message: 'Cart not found' });
         }
+ 
 
+ 
         res.render('cart', { cart });
     } catch (err) {
         console.error(err);

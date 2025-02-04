@@ -27,8 +27,7 @@ router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/signup' }),
     (req, res) => {
         // Set the session the same way as regular login
-        req.session.user = req.user;
-  
+        req.session.users = req.user;
         req.session.save((err) => {
             if (err) {
                 console.error('Session save error:', err);
