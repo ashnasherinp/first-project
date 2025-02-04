@@ -23,20 +23,27 @@ router.post('/resend-otp', userController.resendOtp);
 
 
 router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}))
-router.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/signup' }),
-    (req, res) => {
-        // Set the session the same way as regular login
-        req.session.users = req.user;
-        req.session.save((err) => {
-            if (err) {
-                console.error('Session save error:', err);
-                return res.redirect('/signup');
-            }
-            res.redirect('/');
-        });
-    }
-);
+// router.get('/auth/google/callback', 
+//     passport.authenticate('google', { failureRedirect: '/signup' }),
+//     (req, res) => {
+//         // Set the session the same way as regular login
+//         req.session.users = req.user;
+//         console.log("kdfjgh")
+//         req.session.save((err) => {
+//             if (err) {
+//                 console.error('Session save error:', err);
+//                 return res.redirect('/signup');
+//             }
+//             res.redirect('/');
+//         });
+//     }
+// );
+
+router.get('/auth/google/callback', passport.authenticate('google', {successRedirect: '/googleSuccess', failureRedirect:'/signup'}),(req,res) => {
+    res.redirect('/')
+})
+
+router.get('/googleSuccess', userController.googleSuccess)
 
 router.get('/login',userController.loadlogin)
 router.post('/login',userController.login)

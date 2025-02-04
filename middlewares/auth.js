@@ -87,9 +87,10 @@ const adminAuth = (req,res,next)=>{
     })
 }
 
+
 module.exports = {
     userAuth,
-    adminAuth
+    adminAuth,
 }
 
 

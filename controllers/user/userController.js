@@ -242,6 +242,20 @@ const logout = async(req,res)=>{
 }
 
 
+const googleSuccess = async (req,res)=> {
+  try{
+    const user = await User.findOne({email : req.user.email})
+    if(user.isBlocked){
+      return res.render("login", { message: "user is blocked by admin" });
+    }
+    req.session.user = user
+    res.redirect('/')
+  }catch{
+    res.redirect('/login')
+  }
+}
+
+
 const aboutUs = async (req, res) => {
   try {
     return res.render("aboutUs");
@@ -565,4 +579,5 @@ module.exports = {
   // filterByPrice,
   searchProducts,
   aboutUs,
+  googleSuccess
 };
