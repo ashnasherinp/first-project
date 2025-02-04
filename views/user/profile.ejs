@@ -366,7 +366,6 @@
                              <!-- <label for="walletAmount" class="h4">Amount</label> -->
                              <div class="h3">Balance: ₹<%=wallet && wallet.balance ? wallet.balance : 0  %></div>
                            </div>
-                           <button type="button" class="btn btn-success" onclick="">Add Money</button>
                          </form>
                        </div>
                      </div>
@@ -448,7 +447,6 @@ function confirmLogout() {
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
-      // Redirect to the logout route
       window.location.href = '/logout';
     }
   });
@@ -464,7 +462,6 @@ function confirmChange(type) {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Redirect to the change email page
         window.location.href = '/change-email';
       }
     });
@@ -480,7 +477,6 @@ function confirmChange(type) {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Redirect to the change password page
         window.location.href = '/change-password';
       }
     });
