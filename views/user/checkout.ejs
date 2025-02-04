@@ -116,8 +116,8 @@
                             <div class="card-body">
                                 <h5 class="card-title"><%= item.productId.productName %></h5>
                                 <p class="card-text">Quantity: <%= item.quantity %></p>
-                                <p class="card-text">Price: $<%= item.price %></p>
-                                <p class="card-text">Total: $<%= item.totalPrice %></p>
+                                <p class="card-text">Price: ₹<%= item.price %></p>
+                                <p class="card-text">Total: ₹<%= item.totalPrice %></p>
                             </div>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
             </div>
             
             <div class="cart-total">
-                <h3 id="totalAmount">Total: $<%= totalPrice %></h3>
+                <h3 id="totalAmount">Total: ₹<%= totalPrice %></h3>
         
                  <!-- Hidden coupon info -->
                  <div id="couponInfo" style="display: none;">
@@ -347,260 +347,6 @@ function removeCoupon() {
 
 
 
-// function placeOrder() {
-
-// const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-// console.log('Selected Address:', selectedAddress); 
-// if (!selectedAddress) {
-//   Swal.fire({
-//     icon: 'error',
-//     title: 'Oops...',
-//     text: 'Please select an address.',
-//   });
-//   return;
-// }
-
-// console.log('Selected Address Value:', selectedAddress.value); 
-// const totalElement = document.getElementById("totalAmount");
-// let totalValue = totalElement.textContent.replace(/[^\d.-]/g, '').trim(); 
-
-// totalValue = parseFloat(totalValue); 
-// console.log('Total Element:', totalElement);
-// console.log('Total Value:', totalValue);
-
-// const cartItems = '<%- JSON.stringify(cart.items) %>';
-// console.log('Cart Items:', cartItems);
-
-// let parsedCartItems;
-// try {
-//   console.log('Attempting to parse cart items...');
-//   parsedCartItems = JSON.parse(cartItems);
-//   console.log('Parsed Cart Items:', parsedCartItems);
-// } catch (error) {
-//   console.log(error);
-//   console.error('Error parsing cart items:', error);
-//   Swal.fire({
-//     icon: 'error',
-//     title: 'Error',
-//     text: 'Error parsing cart items.',
-//   });
-//   return;
-// }
-
-// const simplifiedCartItems = parsedCartItems.map(item => ({
-//   productId: item.productId._id,
-//   productName: item.productId.productName,
-//   quantity: item.quantity,
-//   price: item.price,
-// }));
-
-// const selectedPaymentOption = document.querySelector('input[name="paymentMethod"]:checked');
-// if (!selectedPaymentOption) {
-//   Swal.fire({
-//     icon: 'error',
-//     title: 'Oops...',
-//     text: 'Please select a payment option.',
-//   });
-//   return;
-// }
-
-// totalValue = parseFloat(totalValue);
-// console.log('Selected Address:', selectedAddress.value);
-// console.log('Total Value:', totalValue);
-// console.log('Simplified Cart Items:', simplifiedCartItems);
-// console.log('Selected Payment Option:', selectedPaymentOption.value);
-
-// if (selectedPaymentOption.value === 'cashOnDelivery' && totalValue > 1000) {
-//     Swal.fire({
-//       icon: 'warning',
-//       title: 'COD Not Available',
-//       text: 'Cash on Delivery is not allowed for orders above ₹1000. Please choose another payment method.',
-//     });
-//     return;
-//   }
-
-//   // Calculate final amount and apply coupon discount
-//   let finalAmount = totalValue; // Initialize with the total value
-//   const couponCode = document.getElementById("couponCodeInput")?.value || null; // Get coupon code
-//   if (couponCode) {
-//     const couponElement = document.getElementById("discountAmount");
-//     const discountValue = couponElement
-//       ? parseFloat(couponElement.textContent.replace(/[^\d.-]/g, "").trim())
-//       : 0;
-//     finalAmount -= discountValue;
-//   }
-
-//   const appliedCouponCode = couponCode || null;
-// const orderData = {
-//   addressId: selectedAddress.value,
-//   cartItems: simplifiedCartItems,
-//   totalPrice: finalAmount,
-//   paymentMethod: selectedPaymentOption.value,
-//   couponCode: appliedCouponCode, 
-// };
-// console.log("the order is",orderData)
-
-// if (selectedPaymentOption.value === 'Wallet') {
-//     fetch('/placeOrder', {
-//       method: 'POST',
-//       body: JSON.stringify(orderData),
-//       headers: { 'Content-Type': 'application/json' }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//       if (data.success) {
-//         Swal.fire({
-//           icon: 'success',
-//           title: 'Success!',
-//           text: 'Order placed successfully!',
-//         }).then(() => {
-//           window.location.href = `/orderConfirmation?orderId=${data.orderId}`;
-//         });
-//       } else if (data.message === 'Insufficient wallet balance') {
-//         Swal.fire({
-//           icon: 'error',
-//           title: 'Insufficient Wallet Balance',
-//           text: 'Your wallet balance is insufficient for this order. Please top up your wallet or choose another payment method.',
-//         });
-//       } else {
-//         Swal.fire({
-//           icon: 'error',
-//           title: 'Failed',
-//           text: 'Failed to place order. Please try again.',
-//         });
-//       }
-//     })
-//     .catch(error => {
-//       console.error('Error:', error);
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Error',
-//         text: 'An error occurred. Please try again.',
-//       });
-//     });
-//   } else if (selectedPaymentOption.value === 'cashOnDelivery') {
-
-// fetch('/placeOrder', { 
-//   method: 'POST',
-//   body: JSON.stringify(orderData),
-//   headers: { 'Content-Type': 'application/json' }
-// })
-// .then(response => response.json())
-// .then(data => {
-//     console.log("==== orders details",data)
-//   if (data.success) {
-//     Swal.fire({
-//       icon: 'success',
-//       title: 'Success!',
-//       text: 'Order placed successfully!',
-//     }).then(() => {
-//       window.location.href = `/orderConfirmation?orderId=${data.orderId}`;
-//     });
-//   } else {
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Failed',
-//       text: 'Failed to place order. Please try again.',
-//     });
-//   }
-// })
-// .catch(error => {
-//   console.error('Error:', error);
-//   Swal.fire({
-//     icon: 'error',
-//     title: 'Error',
-//     text: 'An error occurred. Please try again.',
-//   });
-// });
-// } else {
-//   fetch('/createPayment', {
-//     method: 'POST',
-//     body: JSON.stringify(orderData),
-//     headers: { 'Content-Type': 'application/json' }
-//   })
-//   .then(response => response.json())
-//   .then(data => {
-//     if (data.success) {
-//       const options = {
-//         key: data.razorpayKey,  
-//         amount: orderData.totalPrice * 100,  
-//         currency: 'INR',
-//         name: 'Liora', 
-//         description: 'Perfume Purchase',
-//         order_id: data.razorpayOrderId, 
-//         handler: function (response) {
-//           // On successful payment, create the order
-//           fetch('/placeOrder', {
-//             method: 'POST',
-//             body: JSON.stringify({
-//               ...orderData,
-//               paymentId: response.razorpay_payment_id,
-//               razorpayOrderId: response.razorpay_order_id,
-//               razorpaySignature: response.razorpay_signature,
-//             }),
-//             headers: { 'Content-Type': 'application/json' }
-//           })
-//           .then(orderResponse => orderResponse.json())
-//           .then(orderData => {
-//             if (orderData.success) {
-//               Swal.fire({
-//                 icon: 'success',
-//                 title: 'Payment Success',
-//                 text: 'Your payment was successful!',
-//               }).then(() => {
-//                 window.location.href = `/orderConfirmation?orderId=${orderData.orderId}`;
-//               });
-//             } else {
-//               Swal.fire({
-//                 icon: 'error',
-//                 title: 'Order Failed',
-//                 text: 'Failed to create the order. Please contact support.',
-//               });
-//             }
-//           });
-//         },
-//         modal: {
-//           ondismiss: function () {
-//             console.log('Payment popup closed by the user.');
-//             Swal.fire({
-//               icon: 'warning',
-//               title: 'Payment Cancelled',
-//               text: 'You cancelled the payment. No order was placed.',
-//             });
-//           },
-//         },
-//         prefill: {
-//           name: 'Customer Name',
-//           email: 'customer@example.com',
-//           contact: '+91xxxxxxxxxx',
-//         },
-//         theme: {
-//           color: '#F37254',
-//         },
-//       };
-
-//       const razorpay = new Razorpay(options);
-//       razorpay.open();
-//     } else {
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Error',
-//         text: 'Failed to initiate payment. Please try again.',
-//       });
-//     }
-//   })
-//   .catch(error => {
-//     console.error('Error:', error);
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Error',
-//       text: 'An error occurred. Please try again.',
-//     });
-//   });
-// }
-// }
-
-
 function placeOrder() {
 
 const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
@@ -673,19 +419,7 @@ if (selectedPaymentOption.value === 'cashOnDelivery' && totalValue > 1000) {
     return;
   }
 
-  // Calculate final amount and apply coupon discount
-  // let finalAmount = totalValue; // Initialize with the total value
-  // const couponCode = document.getElementById("couponCodeInput")?.value || null; // Get coupon code
-  
-  // if (couponCode) {
-  //   const couponElement = document.getElementById("discountAmount");
-  //   const discountValue = couponElement
-  //     ? parseFloat(couponElement.textContent.replace(/[^\d.-]/g, "").trim())
-  //     : 0;
-  //   finalAmount -= discountValue;
-  // }
 
-  // const appliedCouponCode = couponCode || null;
 const orderData = {
   addressId: selectedAddress.value,
   cartItems: simplifiedCartItems,
