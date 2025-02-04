@@ -364,7 +364,7 @@
                          <form>
                            <div class="form-group">
                              <!-- <label for="walletAmount" class="h4">Amount</label> -->
-                             <div class="h3">Balance: ₹<%= wallet.balance %></div>
+                             <div class="h3">Balance: ₹<%=wallet && wallet.balance ? wallet.balance : 0  %></div>
                            </div>
                            <button type="button" class="btn btn-success" onclick="">Add Money</button>
                          </form>
