@@ -302,7 +302,7 @@
                                 <td><%= order.totalPrice %></td>
                                 <td><%=order.paymentStatus%>
                                  <br>
-                                   <% if ( order.paymentStatus==="Pending"){ %>
+                                   <% if ( order.paymentStatus === "Pending" && order.status !== "Cancelled"){ %>
                                         <button onclick="retryPayment('<%=order.orderId %>')">Retry </button>
                                   <% }%>
                                 

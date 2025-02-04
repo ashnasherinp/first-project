@@ -484,7 +484,7 @@ const cancelOrder = async (req, res) => {
     let refundAmount = 0;
     
  
-  if (order.paymentMethod === 'Wallet' || order.paymentMethod === 'Razorpay') {
+  if ((order.paymentMethod === 'Wallet' || order.paymentMethod === 'Razorpay')&&order.paymentStatus==='Paid') {
     let wallet = await Wallet.findOne({ userId: order.user });
     
    
@@ -494,10 +494,9 @@ const cancelOrder = async (req, res) => {
 
    
     refundAmount = order.totalPrice;
-    console.log("refund amount is there: ",refundAmount)
-    console.log(wallet.balance)
+
     wallet.balance += refundAmount;  
-    console.log(wallet.balance)
+ 
 
    
     wallet.transactionHistory.push({
