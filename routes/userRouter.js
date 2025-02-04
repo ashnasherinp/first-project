@@ -43,7 +43,7 @@ router.post('/login',userController.login)
 router.get('/logout',userController.logout)
 
 router.get('/', userController.loadHomepage);
-router.get('/shop',userAuth,userController.loadShoppingPage);
+router.get('/shop',userController.loadShoppingPage);
 router.post('/search',userAuth,userController.searchProducts)
 
 router.get("/aboutUs", userController.aboutUs)
