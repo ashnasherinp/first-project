@@ -209,7 +209,7 @@ function fetchAvailableCoupons() {
         .then(response => response.json())
         .then(data => {
             const couponSelect = document.getElementById('couponCode');
-            couponSelect.innerHTML = ''; // Clear existing coupons in the dropdown
+            couponSelect.innerHTML = ''; 
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Select a coupon';
@@ -246,7 +246,7 @@ function applyCoupon(event) {
     event.preventDefault();
 
     const couponCode = document.getElementById('couponCode').value;
-console.log(couponCode ,'cou')
+
     if (!couponCode) {
         Swal.fire({
             icon: 'error',
@@ -263,10 +263,10 @@ console.log(couponCode ,'cou')
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data, "DATA COUP");
+     
 
         if (data.success) {
-              // Store coupon details globally
+        
               appliedCouponDetails = {
                 code: couponCode,
                 discount: data.discount,
@@ -398,10 +398,7 @@ if (!selectedPaymentOption) {
 }
 
 totalValue = parseFloat(totalValue);
-console.log('Selected Address:', selectedAddress.value);
-console.log('Total Value:', totalValue);
-console.log('Simplified Cart Items:', simplifiedCartItems);
-console.log('Selected Payment Option:', selectedPaymentOption.value);
+
 
 if (selectedPaymentOption.value === 'cashOnDelivery' && totalValue > 1000) {
     Swal.fire({
@@ -496,7 +493,7 @@ fetch('/placeOrder', {
   });
 });
 } else {
-  let isOrderPlaced = false; // Prevent duplicate /placeOrder calls
+  let isOrderPlaced = false; 
 
 fetch('/createPayment', {
   method: 'POST',
@@ -514,10 +511,10 @@ fetch('/createPayment', {
         description: 'Perfume Purchase',
         order_id: data.razorpayOrderId,
         handler: function (response) {
-          console.log("response : ",response);
+     
           if (!isOrderPlaced) {  
-            isOrderPlaced = true; // Prevent duplicate calls
-            console.log('inside handler before fetch')
+            isOrderPlaced = true; 
+      
             fetch('/verifyPayment', {
               method: 'POST',
               body: JSON.stringify({
@@ -612,7 +609,6 @@ function validateForm() {
         const inputValue = input.value.trim();
         const errorElement = document.getElementById(field + '-error');
 
-        // Check if the field is empty
         if (inputValue === "") {
             if (!errorElement) {
                 const errorMessage = "This field is required.";
@@ -630,7 +626,6 @@ function validateForm() {
         }
     });
 
-    // Get values of the form fields
     const name = document.getElementById('name').value;
     const city = document.getElementById('city').value;
     const landMark = document.getElementById('landMark').value;
@@ -639,16 +634,13 @@ function validateForm() {
     const phone = document.getElementById('phone').value;
     const altPhone = document.getElementById('altPhone').value;
 
-    // Pattern for name, city, landmark, and state (should contain alphabets only)
     const namePattern = /^[A-Za-z\s]+$/;
-    
-    // Pincode should be a 6-digit number
+
     const pincodePattern = /^\d{6}$/;
     
-    // Phone number should be 10 digits and not all zeros
     const phonePattern = /^\d{10}$/;
 
-    // Validate Name, City, Landmark, and State for alphabets only
+
     if (!namePattern.test(name)) {
         displayError('name', 'Name should contain alphabets only.');
         isValid = false;
@@ -666,19 +658,19 @@ function validateForm() {
         isValid = false;
     }
 
-    // Validate Pincode
+ 
     if (!pincodePattern.test(pincode)) {
         displayError('pincode', 'Pincode should be a 6-digit number.');
         isValid = false;
     }
 
-    // Validate Phone and Alternate Phone Number
+
     if (!phonePattern.test(phone)) {
         displayError('phone', 'Phone number should be a 10-digit number.');
         isValid = false;
     }
     
-    // Check if phone or alternate phone is all zeros (not valid)
+
     if (phone === '0000000000' || altPhone === '0000000000' || isAllZeros(phone) || isAllZeros(altPhone)) {
         displayError('phone', 'Phone number should not be all zeros.');
         isValid = false;
@@ -697,28 +689,27 @@ function validateForm() {
     return isValid;
 }
 
-// Helper function to check if a phone number consists of all zeros
+
 function isAllZeros(number) {
     return number.split('').every(digit => digit === '0');
 }
 
-// Function to display the error message below the field
 function displayError(fieldId, message) {
     const input = document.getElementById(fieldId);
     const existingErrorElement = document.getElementById(fieldId + '-error');
     
-    // Remove any existing error messages
+ 
     if (existingErrorElement) {
         existingErrorElement.remove();
     }
 
-    // Create new error message element
+    
     const errorDiv = document.createElement('div');
     errorDiv.className = "text-danger";
     errorDiv.textContent = message;
     errorDiv.id = fieldId + '-error';
     
-    // Append the error message below the input field
+
     input.parentNode.appendChild(errorDiv);
 }
 

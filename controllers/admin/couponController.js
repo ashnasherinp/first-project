@@ -15,7 +15,6 @@ const loadCoupon = async(req,res)=>{
 const createCoupon = async(req,res)=>{
   
     try {
-        console.log(req.body);
         const data = {
             couponName :req.body.couponName,
             startDate : new Date(req.body.startDate + 'T00:00:00'),

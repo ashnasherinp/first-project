@@ -12,12 +12,12 @@ const { v4: uuidv4 } = require('uuid')
 const { createPayment } = require('../../controllers/user/paymentController');
 
 const placeOrder = async (req, res) => {
-  console.log("Received Order Request:", req.body);
+
 
   try {
     const { addressId, cartItems, paymentMethod, couponCode } = req.body;
     const userId = req.session.user;
-    console.log(couponCode,'couponcode')
+
 
     if (!cartItems || cartItems.length === 0) {
       return res.status(400).json({ success: false, message: "Cart is empty" });
@@ -102,8 +102,6 @@ const placeOrder = async (req, res) => {
       couponApplied: Boolean(couponCode),
       couponCode: couponCode || null
     });
-
-    console.log('Creating order:', newOrder); 
     await newOrder.save();
 
     const cart = await Cart.findOne({ userId });
@@ -124,7 +122,7 @@ const placeOrder = async (req, res) => {
 const orderDetails = async (req, res) => {
     try {
         const { orderId } = req.query; 
-        console.log('Order ID:', orderId);
+
         
         const order = await Order.findOne({ orderId })
         .populate('address')  
@@ -133,10 +131,7 @@ const orderDetails = async (req, res) => {
        
    
 
-    //  const addressID = order.address._id.toString()
 
-    //  const address = await Address.findOne({"address._id":addressID})
-        // console.log(address)
         if (!order) {
             return res.status(404).json({ success: false, message: "Order not found" });
         }

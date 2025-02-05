@@ -43,14 +43,11 @@ const userSchema = new Schema({
      type: Number,
      default: 0,
    },
-   //  wishlist:{
-   //     type:Schema.Types.ObjectId,
-   //     ref:"Wishlist"
-   //  },
+
    wishlist: [
      {
        type: Schema.Types.ObjectId,
-       ref: "Product", // Reference the Product model instead of Wishlist model
+       ref: "Product", 
      },
    ],
  

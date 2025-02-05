@@ -47,16 +47,11 @@ const login = async (req,res)=>{
 }
 
 const loadDashboard = async (req, res) => {
-    console.log('hey')
+
     try {
-        // Get total counts for users, products, and orders
         let totalUsers = await User.countDocuments();
         let totalProducts = await Product.countDocuments();
         let totalOrders = await Order.countDocuments({status:"Delivered"});
-
-
-
-          // Fetch total sales using the existing aggregation logic (keeping it as is)
         const Sales = await Order.aggregate([
             { $match: { status: 'Delivered' } },
             { 
@@ -70,8 +65,6 @@ const loadDashboard = async (req, res) => {
         ]);
 
         const totalSales = Sales.length > 0 ? Sales[0].totalSales : 0;
-
-        // Fetch total discounts (no change)
         const discount = await Order.aggregate([
             { $match: { status: 'Delivered' } },
             { 
@@ -82,7 +75,7 @@ const loadDashboard = async (req, res) => {
     }]);
         const totalDiscount = discount.length > 0 ? discount[0].discount : 0;
 
-        // Get recent orders
+    
         const orders = await Order.find({ status: "Delivered" }).sort({ createdOn: -1 });
 
         const bestSellingProducts = await Order.aggregate([
@@ -121,7 +114,7 @@ const loadDashboard = async (req, res) => {
         ]);
         
 
-console.log(bestSellingProducts,'bestSellingProducts :')
+
 
         const topBrands = await Order.aggregate([
             { $match: { status: 'Delivered' } }, 
@@ -224,7 +217,6 @@ console.log(bestSellingProducts,'bestSellingProducts :')
             totalSales,
             totalDiscount,
             orders,
-            // topProductDetails,
             bestSellingProducts,
             topBrands,
             topCategories

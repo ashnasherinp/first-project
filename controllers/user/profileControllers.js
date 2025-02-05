@@ -162,29 +162,16 @@ const userProfile = async (req,res)=>{
         const userData = await User.findById(userId)
         const addressData = await Address.findOne({userId: userId})
         const wallet = await Wallet.findOne({ userId: userId });
-        // console.log(addressData)
-
-    // const page = parseInt(req.query.page) || 1;
-    // const limit = 10;  
-    // const skip = (page - 1) * limit;
-
-    
+   
     const orders = await Order.find({ user: userId })
       .sort({ createdOn: -1 })  
-    //   .skip(skip)  
-    //   .limit(limit);  
-
-
-    // const totalOrders = await Order.countDocuments({ user: userId });
-    // const totalPages = Math.ceil(totalOrders / limit);
-        
+      
         res.render('profile',{
             user:userData,
             userAddress :addressData,
             orders: orders,
             wallet,
-            // currentPage: page,
-            // totalPages: totalPages,
+            
         })
     } catch (error) {
         console.error('Error for retrieve data',error)
@@ -330,14 +317,14 @@ const addAddress = async(req,res)=>{
 
 const postAddAddress = async(req,res)=>{
     try {
-        // console.log('hey')
+    
         const userId = req.session.user;
         const userData = await User.findOne({_id:userId});
         console.log(userData)
         const {addressType,name,city,landMark,state,pincode,phone,altPhone} = req.body;
 
         const userAddress = await Address.findOne({userId:userData._id});
-        console.log(userAddress)
+      
 
         if(!userAddress){
              
@@ -365,9 +352,9 @@ const postAddAddress = async(req,res)=>{
 
 const editAddress = async(req,res)=>{
     try {
-        // console.log('het')
+      
         const addressId = req.query.id
-        // console.log(addressId)
+    
         const user = req.session.user
         const currAddress = await Address.findOne({
             "address._id" : addressId,
@@ -461,7 +448,7 @@ const cancelOrder = async (req, res) => {
       const orderId = req.params.orderId;
    
       const order = await Order.findById(orderId).populate('orderedItems.product');
-       console.log("order",order)
+
       if (!order) {
         return res.status(404).send('Order not found');
       }
@@ -514,7 +501,7 @@ const cancelOrder = async (req, res) => {
       refundAmount,
       message: `Order cancelled successfully. Refund of ₹${refundAmount} has been credited to your wallet.`,
     });
-    //   res.redirect('/userProfile'); 
+   
     } catch (error) {
       console.error(error);
       res.status(500).send('Server Error');

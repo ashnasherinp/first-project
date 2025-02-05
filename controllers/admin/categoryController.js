@@ -17,7 +17,7 @@ const categoryInfo = async(req,res)=>{
         .skip(skip)
         
         .limit(limit)
-        console.log(categoryData)
+  
 
         const totalCategories = await Category.countDocuments()
         const totalPages = Math.ceil(totalCategories/limit)

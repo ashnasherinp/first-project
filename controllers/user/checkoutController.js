@@ -47,7 +47,7 @@ const getCheckout = async (req, res) => {
 
 const checkout = async (req, res) => {
     try {
-        console.log('Entering checkout function');
+  
  
     
         const userId = req.session.user; 
@@ -61,7 +61,6 @@ const checkout = async (req, res) => {
     
 
         if (!cart || cart.items.length === 0) {
-            console.log('Cart is empty');
             return res.status(400).json({ error: 'Cart is empty' });
         }
 
@@ -79,7 +78,6 @@ const checkout = async (req, res) => {
     
         const address = await Address.findOne({ _id: addressId, userId });
         if (!address) {
-            console.log('Invalid or missing address');
             return res.status(400).json({ error: 'Invalid or missing address' });
         }
 
@@ -97,7 +95,7 @@ const checkout = async (req, res) => {
             status: 'Pending', 
             paymentMethod,
             couponApplied:isCouponApplied,
-            // userId,
+  
            
         });
 
@@ -140,7 +138,7 @@ const applyCoupon = async (req, res) => {
 
         const totalPrice = cart.items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
-        // Check if total price meets minimum price for the coupon
+ 
         if (totalPrice < coupon.minimumPrice) {
             return res.status(400).json({
                 success: false,

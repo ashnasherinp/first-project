@@ -8,7 +8,6 @@ const listOrders = (req, res) => {
     .populate('user') 
     .populate('orderedItems.product')
     .then(orders => {
-        console.log(orders);
       res.render('orderList', { orders });
     })
     .catch(err => {

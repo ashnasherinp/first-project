@@ -61,7 +61,6 @@ const addProducts = async(req,res)=>{
                 quantity:products.quantity,
                    parent: parentValue,
                 size:products.size,
-                // color:products.color,
                 productImage:images,
                 status:'Available',
 
@@ -82,13 +81,11 @@ const addProducts = async(req,res)=>{
 
 
 const getAllProducts = async(req,res)=>{
-    // console.log('hey')
+
     try {
         const search = req.query.search || ""
         const page = parseInt(req.query.page) || 1
         const limit = 4
-        // console.log("Query Params:", req.query);
-
         const productData = await Product.find({
             $or:[
                 {productName :{$regex:new RegExp('.*'+search+".*","i")}},
@@ -97,7 +94,6 @@ const getAllProducts = async(req,res)=>{
             ],
         }).limit(limit*1).skip((page - 1) * limit)
         .populate('category').exec();
-        // console.log(productData)
 
         const count = await  Product.find({
             $or:[
@@ -214,58 +210,6 @@ const getEditProduct = async(req,res)=>{
     }
 }
 
-// const editProduct = async (req,res)=>{
-//     try {
-//         const id =req.params.id
-//         console.log("Product ID:", id);
-//         const product = await Product.findOne({_id:id})
-//         console.log("Existing Product:", product);
-//         const data = req.body
-//         console.log("Request Body Data:", data);
-//         const existingProduct = await Product.findOne({
-//             productName:data.productName,
-//             _id:{$ne:id}
-
-//         })
-//         console.log("Existing Product with Same Name:", existingProduct);
-//         if(existingProduct){
-//             return res.status(400).json({error:'product with this name already exists. please try with another name'})
-//         }
-//         const images = []
-
-//         if(req.files && req.files.length>0){
-//             for(let i=0;i<req.files.length;i++){
-//                 images.push(req.files[i].filename)
-
-//                 }
-//             }
-
-//             console.log("Uploaded Images:", images);
-
-//             const parentValue = data.parent && data.parent !== "" ? data.parent : null;
-//         const updateFields ={
-//             productName:data.productName,
-//             description:data.description,
-//             brand:data.brand,
-//             category:product.category,
-//             regularPrice:data.regularPrice,
-//             salePrice:data.salePrice,
-//             quantity:data.quantity,
-//             parent: parentValue,
-//             size:data.size
-//         }
-//         console.log("Update Fields:", updateFields);
-//         if(req.files.length>0){
-//             updateFields.$push ={productImage:{$each:images}}
-
-//         }
-//         await Product.findByIdAndUpdate(id,updateFields,{new:true})
-//         res.redirect('/admin/products')
-//     } catch (error) {
-//         console.error(error)
-//         res.redirect('/pageerror')
-//     }
-// }
 const editProduct = async (req, res) => {
     try {
       const id = req.params.id; 

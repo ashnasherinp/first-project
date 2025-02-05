@@ -55,22 +55,18 @@ const dashboard = async (req, res) => {
     try {
         const { quickFilter, startDate, endDate } = req.body;
         let matchCondition = { status: "Delivered" };
-        // let matchCondition = {cancellationReason : "none"};
-        // console.log("quickFilter : ",quickFilter);
-        // console.log("startDate : ",startDate);
-        // console.log("endDate : ",endDate);
-
+      
 
          
         
         if (startDate && endDate) {
-            // If both startDate and endDate are provided, apply the date range filter
+         
             matchCondition.createdOn = {
                 $gte: new Date(startDate),
                 $lt: new Date(endDate)
             };
         } else if (quickFilter) {
-            // If quickFilter is provided and startDate/endDate are not, apply quickFilter
+     
             matchCondition.createdOn = {};
             const now = new Date();
             switch (quickFilter) {
@@ -127,7 +123,7 @@ const generatePdfReport = async (req, res) => {
 
         let matchCondition = { status: "Delivered" };
 
-        // Apply date range filters
+  
         if (startDate && endDate) {
             matchCondition.createdOn = {
                 $gte: new Date(startDate),
@@ -165,10 +161,10 @@ const generatePdfReport = async (req, res) => {
             }
         }
 
-        // Fetch filtered orders
+   
         const orders = await Order.find(matchCondition);
 
-        //create document and Set response headers to indicate a PDF file download
+  
         const doc = new PDFDocument();
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales_report.pdf');
@@ -209,7 +205,7 @@ const generateExcelReport = async (req, res) => {
 
         let matchCondition = { status: "Delivered" };
 
-        // Apply date range filters
+
         if (startDate && endDate) {
             matchCondition.createdOn = {
                 $gte: new Date(startDate),
@@ -247,14 +243,13 @@ const generateExcelReport = async (req, res) => {
             }
         }
 
-        // Fetch filtered orders
         const orders = await Order.find(matchCondition);
 
-        // Create a new Excel workbook and worksheet
+  
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Sales Report');
 
-        // Set up columns
+
         worksheet.columns = [
             { header: 'Order ID', key: 'orderId', width: 25 },
             { header: 'Date', key: 'date', width: 15 },
@@ -264,7 +259,7 @@ const generateExcelReport = async (req, res) => {
             { header: 'Status', key: 'status', width: 15 },
         ];
 
-        // Add rows for each order
+
         orders.forEach(order => {
             worksheet.addRow({
                 orderId: order.orderId,
@@ -276,11 +271,9 @@ const generateExcelReport = async (req, res) => {
             });
         });
 
-        // Set headers to force download
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
 
-        // Write the workbook to the response
         await workbook.xlsx.write(res);
         res.end();
     } catch (error) {
