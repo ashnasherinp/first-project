@@ -26,9 +26,9 @@
                             </td>
                             <td><%= item.price %></td>
                             <td>
-                                <button  onclick="updateQuantity('<%= item.productId._id %>', -1)">-</button>
+                                <button  onclick="updateQuantity('<%= item.productId._id %>', -1, '<%= item.productId.quantity %>', '<%= item.quantity %>')">-</button>
                                 <span><%= item.quantity %></span>
-                                <button  onclick="updateQuantity('<%= item.productId._id %>', 1)">+</button>
+                                <button  onclick="updateQuantity('<%= item.productId._id %>', 1, '<%= item.productId.quantity %>', '<%= item.quantity %>')">+</button>
                             </td>
                             <td><%= item.totalPrice %></td>
                             <td>
@@ -70,19 +70,51 @@
             }
         });
     }
-    function updateQuantity(productId, change) {
-    change = Number(change);  
+
+//     function updateQuantity(productId, change, productQuantity, itemQuantity) {
+//     change = Number(change);  
+
+//     $.ajax({
+//         url: '/updateCartQuantity',
+//         method: 'POST',
+//         data: { productId: productId, change: change},
+//         success: function(response) {
+//             location.reload();  
+//         },
+//         error: function(error) {
+//             console.error(error);
+//             alert('Error updating quantity.');
+//         }
+//     });
+// }
+
+function updateQuantity(productId, change, productQuantity, itemQuantity) {
+    change = Number(change);
 
     $.ajax({
         url: '/updateCartQuantity',
         method: 'POST',
         data: { productId: productId, change: change },
         success: function(response) {
-            location.reload();  
+            if (response.error === 'maxLimit') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Only 5 items are allowed!',
+                    confirmButtonColor: '#d33'
+                });
+            } else {
+                location.reload();
+            }
         },
         error: function(error) {
             console.error(error);
-            alert('Error updating quantity.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update quantity(only 5 items are allowed). Please try again.',
+                confirmButtonColor: '#d33'
+            });
         }
     });
 }

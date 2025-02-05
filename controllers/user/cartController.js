@@ -52,7 +52,7 @@ const addToCart = async (req, res) => {
       });
     }
 
-    const maxQuantityPerPerson = 10;
+    const maxQuantityPerPerson = 5;
     if (quantity > maxQuantityPerPerson) {
       return res.status(400).json({
         error: 'maxQuantityExceeded',
@@ -94,7 +94,7 @@ const getCart = async (req, res) => {
       await cart.save();
     }
 
-    const maxQuantityPerPerson = 10;
+    const maxQuantityPerPerson = 5;
 
 
     cart.items = cart.items.map((item) => {
@@ -149,7 +149,7 @@ const removeProduct = async (req, res) => {
 
 const updateCartQuantity = async (req, res) => {
   try {
-      const { productId, change } = req.body;
+      const { productId, change} = req.body;
       const userId = req.session.user;
 
       if (!userId) {
@@ -169,22 +169,20 @@ const updateCartQuantity = async (req, res) => {
       }
 
       const item = cart.items[itemIndex];
-
     
       const product = await Product.findById(productId);
       if (!product) {
           return res.status(404).json({ error: 'productNotFound', message: 'Product not found.' });
       }
 
-   
-      const numericChange = parseInt(change, 10);
+      const numericChange = parseInt(change);
       if (isNaN(numericChange)) {
           return res.status(400).json({ error: 'invalidChange', message: 'Invalid quantity change.' });
       }
 
       const newQuantity = item.quantity + numericChange;
 
-      if (newQuantity > product.stock) {
+      if (newQuantity > product.quantity) {
           return res.status(400).json({
               error: 'insufficientStock',
               message: `Only ${product.stock} items left in stock.`,

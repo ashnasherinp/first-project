@@ -350,7 +350,7 @@ function removeCoupon() {
 function placeOrder() {
 
 const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-console.log('Selected Address:', selectedAddress); 
+
 if (!selectedAddress) {
   Swal.fire({
     icon: 'error',
@@ -360,25 +360,18 @@ if (!selectedAddress) {
   return;
 }
 
-console.log('Selected Address Value:', selectedAddress.value); 
 const totalElement = document.getElementById("totalAmount");
 let totalValue = totalElement.textContent.replace(/[^\d.-]/g, '').trim(); 
 
 totalValue = parseFloat(totalValue); 
-console.log('Total Element:', totalElement);
-console.log('Total Value:', totalValue);
 
 const cartItems = '<%- JSON.stringify(cart.items) %>';
-console.log('Cart Items:', cartItems);
 
 let parsedCartItems;
 try {
-  console.log('Attempting to parse cart items...');
   parsedCartItems = JSON.parse(cartItems);
-  console.log('Parsed Cart Items:', parsedCartItems);
 } catch (error) {
   console.log(error);
-  console.error('Error parsing cart items:', error);
   Swal.fire({
     icon: 'error',
     title: 'Error',
