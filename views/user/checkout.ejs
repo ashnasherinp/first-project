@@ -560,7 +560,9 @@ fetch('/createPayment', {
               icon: 'warning',
               title: 'Payment Cancelled',
               text: 'You cancelled the payment.Please retry from your orders.',
-            });
+            }).then(() => {
+      location.reload(); 
+    });
           },
         },
         prefill: {
@@ -594,6 +596,7 @@ fetch('/createPayment', {
 
 }
 }
+
 document.getElementById('addAddressForm').addEventListener('submit', function(event) {
     if (!validateForm()) {
         event.preventDefault();
